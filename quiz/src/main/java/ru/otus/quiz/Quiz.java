@@ -60,12 +60,14 @@ public class Quiz {
             answer = Integer.parseInt(userInput.readLine());
         }
         catch (NumberFormatException | IOException e) {
-            userOutput.printf("Enter the numeric answer only");
+            userOutput.printf("Enter the numeric answer only\n");
             this.readAnswer(question);
+            return;
         }
         if((answer < 1) || (answer > question.getOptions().length)) {
-            userOutput.printf("The numeric answer must be between [1, %d]", question.getOptions().length);
+            userOutput.printf("The numeric answer must be between [1, %d]\n", question.getOptions().length);
             this.readAnswer(question);
+            return;
         }
         if(answer == question.getRightAnswer()) {
             answers.add(true);

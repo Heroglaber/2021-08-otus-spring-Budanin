@@ -33,3 +33,4 @@ hs_err_pid*
 log/
 target/
 .mvn/
+/dependency-reduced-pom.xml
