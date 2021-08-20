@@ -19,7 +19,7 @@ public class MessageServiceImpl implements MessageService {
         this.locale = locale;
     }
 
-    public String getMessage(String key, Object[] args) throws NoSuchMessageException {
+    public String getMessage(String key, Object ...args) throws NoSuchMessageException {
         return messageSource.getMessage(key, args, this.locale);
     }
 }

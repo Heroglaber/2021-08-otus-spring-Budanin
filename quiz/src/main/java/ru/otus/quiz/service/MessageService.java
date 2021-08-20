@@ -4,5 +4,5 @@ import org.springframework.context.NoSuchMessageException;
 import org.springframework.lang.Nullable;
 
 public interface MessageService {
-    String getMessage(String key, @Nullable Object[] args) throws NoSuchMessageException;
+    String getMessage(String key, Object ...args) throws NoSuchMessageException;
 }
