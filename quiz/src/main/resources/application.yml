@@ -1,0 +1,9 @@
+quiz:
+  language: en
+csv:
+  config:
+    basename: i18n/csv
+spring:
+  messages:
+    basename: i18n/messages
+    fallback-to-system-locale: false
