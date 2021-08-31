@@ -55,19 +55,21 @@ public class DataInitializationTest {
     @DisplayName("join tables in the correct way")
     @Test
     void shouldJoinTablesInCorrectWay() {
-        List resultList = jdbcTemplate.queryForList("SELECT BOOKS.ID as BOOKID,\n" +
-                "BOOKS.TITLE,\n" +
-                "GENRES.NAME as GENRE,\n" +
-                "AUTHORS.NAME as AUTHOR\n" +
-                "FROM BOOKS\n" +
-                "LEFT JOIN GENRES ON BOOKS.GENREID = GENRES.ID\n" +
-                "LEFT JOIN BOOK_AUTHOR BA ON BA.BOOKID = BOOKS.ID\n" +
-                "LEFT JOIN AUTHORS ON AUTHORS.ID = BA.AUTHORID");
+        List resultList = jdbcTemplate.queryForList(
+                "select books.id as book_id,\n" +
+                        "books.title,\n" +
+                        "genres.name as genre,\n" +
+                        "authors.name as author,\n" +
+                        "from books\n" +
+                        "left join book_authors ba on ba.book_id = books.id\n" +
+                        "left join book_genres bg on bg.book_id = books.id\n" +
+                        "left join authors on authors.id = ba.author_id\n" +
+                        "left join genres on genres.id = bg.genre_id");
         assertThat(resultList).containsExactlyInAnyOrder(
-                Map.of("BOOKID", Long.valueOf(1), "TITLE", "The Roadside Picnic", "GENRE", "fantasy", "AUTHOR", "Arkady Strugatsky"),
-                Map.of("BOOKID", Long.valueOf(1), "TITLE", "The Roadside Picnic", "GENRE", "fantasy", "AUTHOR", "Boris Strugatsky"),
-                Map.of("BOOKID", Long.valueOf(2), "TITLE", "The Final Circle of Paradise", "GENRE", "fantasy", "AUTHOR", "Arkady Strugatsky"),
-                Map.of("BOOKID", Long.valueOf(2), "TITLE", "The Final Circle of Paradise", "GENRE", "fantasy", "AUTHOR", "Boris Strugatsky")
+                Map.of("BOOK_ID", Long.valueOf(1), "TITLE", "The Roadside Picnic", "GENRE", "fantasy", "AUTHOR", "Arkady Strugatsky"),
+                Map.of("BOOK_ID", Long.valueOf(1), "TITLE", "The Roadside Picnic", "GENRE", "fantasy", "AUTHOR", "Boris Strugatsky"),
+                Map.of("BOOK_ID", Long.valueOf(2), "TITLE", "The Final Circle of Paradise", "GENRE", "fantasy", "AUTHOR", "Arkady Strugatsky"),
+                Map.of("BOOK_ID", Long.valueOf(2), "TITLE", "The Final Circle of Paradise", "GENRE", "fantasy", "AUTHOR", "Boris Strugatsky")
         );
     }
 }

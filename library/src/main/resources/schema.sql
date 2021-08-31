@@ -1,25 +1,37 @@
-DROP TABLE IF EXISTS AUTHORS;
-CREATE TABLE AUTHORS(
-                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                        name VARCHAR(255) NOT NULL
+drop table if exists authors;
+create table authors (
+    id bigserial,
+    name varchar(800),
+    primary key (id)
 );
-DROP TABLE IF EXISTS GENRES;
-CREATE TABLE GENRES(
-                       id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                       name VARCHAR(255) NOT NULL
+drop table if exists genres;
+create table genres (
+    id bigserial,
+    name varchar(800),
+    primary key (id)
 );
-DROP TABLE IF EXISTS BOOKS;
-CREATE TABLE BOOKS(
-                      id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                      title VARCHAR(255) NOT NULL,
-                      genreId BIGINT,
-                      foreign key (genreId) references GENRES(id) ON DELETE SET NULL
+drop table if exists books;
+create table books (
+    id bigserial,
+    title varchar(800),
+    primary key (id)
 );
-DROP TABLE IF EXISTS BOOK_AUTHOR;
-CREATE TABLE BOOK_AUTHOR(
-                      id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                      bookId BIGINT NOT NULL,
-                      authorId BIGINT NOT NULL,
-                      foreign key (bookId) references BOOKS(id) ON DELETE CASCADE,
-                      foreign key (authorId) references AUTHORS(id) ON DELETE CASCADE
+drop table if exists comments;
+create table comments (
+    id bigserial,
+    book_id bigint references books(id) on delete cascade,
+    message varchar(5000),
+    primary key (id)
+);
+drop table if exists book_authors;
+create table book_authors(
+    book_id bigint references books(id) on delete cascade,
+    author_id bigint references authors(id) on delete cascade,
+    primary key (book_id, author_id)
+);
+drop table if exists book_genres;
+create table book_genres(
+    book_id bigint references books(id) on delete cascade,
+    genre_id bigint references genres(id) on delete cascade,
+    primary key (book_id, genre_id)
 );
