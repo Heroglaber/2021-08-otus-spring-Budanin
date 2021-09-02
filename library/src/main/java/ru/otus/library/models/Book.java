@@ -2,6 +2,7 @@ package ru.otus.library.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -12,6 +13,7 @@ import java.util.List;
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Entity
 @Table(name = "books")
 @NamedEntityGraph(name = "book-authors-graph",
@@ -41,4 +43,8 @@ public class Book {
     @JoinTable(name = "book_genres", joinColumns = @JoinColumn(name = "book_id"),
     inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private List<Genre> genres;
+
+    public Book(String title) {
+        this.title = title;
+    }
 }

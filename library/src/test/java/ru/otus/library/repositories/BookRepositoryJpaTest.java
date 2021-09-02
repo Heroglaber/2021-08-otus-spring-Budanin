@@ -13,7 +13,6 @@ import ru.otus.library.models.Book;
 import ru.otus.library.models.Comment;
 import ru.otus.library.models.Genre;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,11 +44,13 @@ public class BookRepositoryJpaTest {
     void shouldSaveAllBookInfo() {
         val author1 = new Author(0, NEW_AUTHOR_NAME_FIRST);
         val author2 = new Author(0, NEW_AUTHOR_NAME_SECOND);
+        List<Author> authors = List.of(author1, author2);
         val genre1 = new Genre(0, NEW_GENRE_NAME_FIRST);
         val genre2 = new Genre(0, NEW_GENRE_NAME_SECOND);
-        List<Author> authors = List.of(author1, author2);
         List<Genre> genres = List.of(genre1, genre2);
-        List<Comment> comments = Collections.emptyList();
+        val comment1 = new Comment(0, "Great book!!1");
+        val comment2 = new Comment(0, "Read`t in one breathe.");
+        List<Comment> comments = List.of(comment1, comment2);
 
         val book = new Book(0, NEW_BOOK_NAME, comments, authors, genres);
         bookRepository.save(book);
@@ -59,6 +60,7 @@ public class BookRepositoryJpaTest {
 
         val actualBook = em.find(Book.class, book.getId());
         assertThat(actualBook).isNotNull().matches(b -> b.getTitle().equals(NEW_BOOK_NAME))
+                .matches(b -> b.getComments() != null && b.getComments().size() == 2 && b.getComments().get(0).getId() > 0)
                 .matches(b -> b.getAuthors() != null && b.getAuthors().size() == 2 && b.getAuthors().get(0).getId() > 0)
                 .matches(b -> b.getGenres() != null && b.getGenres().size() == 2 && b.getGenres().get(1).getName().equals(NEW_GENRE_NAME_SECOND));
     }
@@ -71,6 +73,7 @@ public class BookRepositoryJpaTest {
         assertThat(optionalActualBook).isPresent().get()
                 .usingRecursiveComparison().isEqualTo(expectedBook);
         assertThat(optionalActualBook.get())
+                .matches(book -> book.getComments() != null && book.getComments().size() > 0)
                 .matches(book -> book.getAuthors() != null && book.getAuthors().size() > 0)
                 .matches(book -> book.getGenres() != null && book.getGenres().size() > 0);
     }
@@ -100,6 +103,7 @@ public class BookRepositoryJpaTest {
         val expectedBook = em.find(Book.class, 1L);
         assertThat(booksWithGivenTitle).containsExactly(expectedBook);
         assertThat(booksWithGivenTitle).isNotNull()
+                .allMatch(book -> book.getComments() != null && book.getComments().size() > 0)
                 .allMatch(book -> book.getAuthors() != null && book.getAuthors().size() > 0)
                 .allMatch(book -> book.getGenres() != null && book.getGenres().size() > 0);
         assertThat(booksWithGivenTitle.get(0).getAuthors()

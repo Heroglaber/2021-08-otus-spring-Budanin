@@ -14,9 +14,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("After initialization database must ")
 @JdbcTest
 public class DataInitializationTest {
-    private static final int EXPECTED_AUTHORS_COUNT = 2;
-    private static final int EXPECTED_GENRES_COUNT = 4;
-    private static final int EXPECTED_BOOK_COUNT = 2;
+    private static final int EXPECTED_AUTHORS_COUNT = 10;
+    private static final int EXPECTED_GENRES_COUNT = 6;
+    private static final int EXPECTED_BOOK_COUNT = 10;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -46,7 +46,7 @@ public class DataInitializationTest {
     @Test
     void shouldContainExactlyAuthors() {
         List resultList = jdbcTemplate.queryForList("SELECT ID, NAME FROM AUTHORS");
-        assertThat(resultList).containsExactlyInAnyOrder(
+        assertThat(resultList).contains(
                 Map.of("ID", Long.valueOf(1), "NAME", "Arkady Strugatsky"),
                 Map.of("ID", Long.valueOf(2), "NAME", "Boris Strugatsky")
         );
@@ -65,7 +65,7 @@ public class DataInitializationTest {
                         "left join book_genres bg on bg.book_id = books.id\n" +
                         "left join authors on authors.id = ba.author_id\n" +
                         "left join genres on genres.id = bg.genre_id");
-        assertThat(resultList).containsExactlyInAnyOrder(
+        assertThat(resultList).contains(
                 Map.of("BOOK_ID", Long.valueOf(1), "TITLE", "The Roadside Picnic", "GENRE", "fantasy", "AUTHOR", "Arkady Strugatsky"),
                 Map.of("BOOK_ID", Long.valueOf(1), "TITLE", "The Roadside Picnic", "GENRE", "fantasy", "AUTHOR", "Boris Strugatsky"),
                 Map.of("BOOK_ID", Long.valueOf(2), "TITLE", "The Final Circle of Paradise", "GENRE", "fantasy", "AUTHOR", "Arkady Strugatsky"),
