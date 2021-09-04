@@ -9,13 +9,15 @@ public interface AuthorDao {
 
     Author insert(Author author);
 
-    Author insert(String authorName);
+    Author update(Author author);
 
     Author getById(long id);
 
     Author getByName(String name);
 
     List<Author> getAll();
+
+    List<Author> findAllUsed();
 
     void deleteById(long id);
 }

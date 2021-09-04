@@ -9,7 +9,7 @@ public interface GenreDao {
 
     Genre insert(Genre genre);
 
-    Genre insert(String genreName);
+    Genre update(Genre genre);
 
     Genre getById(long id);
 

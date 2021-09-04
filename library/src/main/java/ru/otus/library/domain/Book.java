@@ -1,21 +1,19 @@
 package ru.otus.library.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 public class Book {
     private long id;
-    private final String title;
-    private final long genreId;
-
-    public Book(long id, String title, long genreId) {
-        this.id = id;
-        this.title = title;
-        this.genreId = genreId;
-    }
-
-    public Book(String title, long genreId) {
-        this.title = title;
-        this.genreId = genreId;
-    }
+    private String title;
+    private Genre genre;
+    private List<Author> authors;
 }

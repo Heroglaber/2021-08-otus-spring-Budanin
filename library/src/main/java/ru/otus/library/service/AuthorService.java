@@ -7,5 +7,5 @@ public interface AuthorService {
 
     Author findById(long id);
 
-    Author addAuthor(String authorName);
+    Author add(Author author);
 }

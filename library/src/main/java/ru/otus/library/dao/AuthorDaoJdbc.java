@@ -9,11 +9,13 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.otus.library.domain.Author;
 
+import javax.management.openmbean.InvalidKeyException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @Repository
 public class AuthorDaoJdbc implements AuthorDao{
@@ -33,19 +35,24 @@ public class AuthorDaoJdbc implements AuthorDao{
     public Author insert(Author author) {
         KeyHolder kh = new GeneratedKeyHolder();
         MapSqlParameterSource params =
-                new MapSqlParameterSource(Map.of("id", author.getId(), "name", author.getName()));
-        jdbc.update("insert into authors (id, `name`) values (:id, :name)", params, kh);
+                new MapSqlParameterSource(Map.of( "name", author.getName()));
+        jdbc.update("insert into authors (name) values (:name)", params, kh);
         author.setId(kh.getKey().longValue());
         return author;
     }
 
     @Override
-    public Author insert(String authorName) {
-        KeyHolder kh = new GeneratedKeyHolder();
+    public Author update(Author author) {
+        if(author.getId() <= 0) {
+            throw new InvalidKeyException("Author id is not specified.");
+        }
         MapSqlParameterSource params =
-                new MapSqlParameterSource(Map.of( "name", authorName));
-        jdbc.update("insert into authors (name) values (:name)", params, kh);
-        return new Author(kh.getKey().longValue(), authorName);
+                new MapSqlParameterSource(Map.of(
+                        "id", author.getId(),
+                        "name", author.getName()
+                ));
+        jdbc.update("update authors set name=:name where id=:id", params);
+        return author;
     }
 
     @Override
@@ -53,7 +60,7 @@ public class AuthorDaoJdbc implements AuthorDao{
         Map<String, Object> params = Collections.singletonMap("id", id);
         try {
             return jdbc.queryForObject(
-                    "select id, name from authors where id = :id", params, new AuthorMapper()
+                    "select id, name from authors where id = :id", params, new AuthorRowMapper()
             );
         }
         catch (EmptyResultDataAccessException e) {
@@ -66,7 +73,7 @@ public class AuthorDaoJdbc implements AuthorDao{
         Map<String, Object> params = Collections.singletonMap("name", name);
         try {
             return jdbc.queryForObject(
-                    "select id, name from authors where name = :name", params, new AuthorMapper()
+                    "select id, name from authors where name = :name", params, new AuthorRowMapper()
             );
         }
         catch (EmptyResultDataAccessException e) {
@@ -77,11 +84,19 @@ public class AuthorDaoJdbc implements AuthorDao{
     @Override
     public List<Author> getAll() {
         try {
-            return jdbc.query("select id, name from authors", new AuthorMapper());
+            return jdbc.query("select id, name from authors", new AuthorRowMapper());
         }
         catch (EmptyResultDataAccessException e) {
             return Collections.emptyList();
         }
+    }
+
+    @Override
+    public List<Author> findAllUsed() {
+        return jdbc.query("select a.id, a.name " +
+                "from authors a inner join book_author ba on a.id = ba.authorid " +
+                "group by a.id, a.name " +
+                "order by a.name", new AuthorRowMapper());
     }
 
     @Override
@@ -92,7 +107,7 @@ public class AuthorDaoJdbc implements AuthorDao{
         );
     }
 
-    private static class AuthorMapper implements RowMapper<Author> {
+    private static class AuthorRowMapper implements RowMapper<Author> {
 
         @Override
         public Author mapRow(ResultSet resultSet, int i) throws SQLException {

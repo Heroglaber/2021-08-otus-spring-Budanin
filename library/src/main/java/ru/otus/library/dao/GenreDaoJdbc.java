@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.otus.library.domain.Genre;
 
+import javax.management.openmbean.InvalidKeyException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
@@ -33,19 +34,24 @@ public class GenreDaoJdbc implements GenreDao{
     public Genre insert(Genre genre) {
         KeyHolder kh = new GeneratedKeyHolder();
         MapSqlParameterSource params =
-                new MapSqlParameterSource(Map.of("id", genre.getId(), "name", genre.getName()));
-        jdbc.update("insert into genres (id, `name`) values (:id, :name)", params, kh);
+                new MapSqlParameterSource(Map.of( "name", genre.getName()));
+        jdbc.update("insert into genres (name) values (:name)", params, kh);
         genre.setId(kh.getKey().longValue());
         return genre;
     }
 
     @Override
-    public Genre insert(String genreName) {
-        KeyHolder kh = new GeneratedKeyHolder();
+    public Genre update(Genre genre) {
+        if(genre.getId() <= 0) {
+            throw new InvalidKeyException("Author id is not specified.");
+        }
         MapSqlParameterSource params =
-                new MapSqlParameterSource(Map.of("name", genreName));
-        jdbc.update("insert into genres (name) values (:name)", params, kh);
-        return new Genre(kh.getKey().longValue(), genreName);
+                new MapSqlParameterSource(Map.of(
+                        "id", genre.getId(),
+                        "name", genre.getName()
+                ));
+        jdbc.update("update genres set name=:name where id=:id", params);
+        return genre;
     }
 
     @Override
@@ -53,7 +59,7 @@ public class GenreDaoJdbc implements GenreDao{
         Map<String, Object> params = Collections.singletonMap("id", id);
         try {
             return jdbc.queryForObject(
-                    "select id, name from genres where id = :id", params, new GenreDaoJdbc.GenreMapper()
+                    "select id, name from genres where id = :id", params, new GenreDaoJdbc.GenreRowMapper()
             );
         }
         catch (EmptyResultDataAccessException e) {
@@ -66,7 +72,7 @@ public class GenreDaoJdbc implements GenreDao{
         Map<String, Object> params = Collections.singletonMap("name", name);
         try {
             return jdbc.queryForObject(
-                    "select top 1 id, name from genres where name = :name", params, new GenreDaoJdbc.GenreMapper()
+                    "select top 1 id, name from genres where name = :name", params, new GenreDaoJdbc.GenreRowMapper()
             );
         }
         catch (EmptyResultDataAccessException e) {
@@ -77,7 +83,7 @@ public class GenreDaoJdbc implements GenreDao{
     @Override
     public List<Genre> getAll() {
         try {
-            return jdbc.query("select id, name from genres", new GenreDaoJdbc.GenreMapper());
+            return jdbc.query("select id, name from genres", new GenreDaoJdbc.GenreRowMapper());
         }
         catch (EmptyResultDataAccessException e) {
             return Collections.emptyList();
@@ -92,7 +98,7 @@ public class GenreDaoJdbc implements GenreDao{
         );
     }
 
-    private static class GenreMapper implements RowMapper<Genre> {
+    private static class GenreRowMapper implements RowMapper<Genre> {
 
         @Override
         public Genre mapRow(ResultSet resultSet, int i) throws SQLException {

@@ -1,14 +1,22 @@
 package ru.otus.library.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotBlank;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 public class Genre {
     private long id;
-    private final String name;
+    @NotBlank
+    private String name;
 
-    public Genre(long id, String name) {
-        this.id = id;
+    public Genre(String name) {
         this.name = name;
     }
 }

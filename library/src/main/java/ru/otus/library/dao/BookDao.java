@@ -1,5 +1,6 @@
 package ru.otus.library.dao;
 
+import ru.otus.library.domain.Author;
 import ru.otus.library.domain.Book;
 
 import java.util.List;
@@ -7,17 +8,19 @@ import java.util.List;
 public interface BookDao {
     int count();
 
+    List<Book> findAllWithAllInfo();
+
     Book insert(Book book);
 
     Book update(Book book);
 
-    Book getById(long id);
+    Book addAuthor(Book book, Author author);
 
-    Book getByTitle(String title);
+    Book deleteAuthor(Book book, Author author);
 
-    List<Book> getAll();
+    void delete(Book book);
 
-    List<Book> getAllByGenre(long genreId);
+    Book findById(long id);
 
-    void deleteById(long id);
+    Book findByTitle(String title);
 }
