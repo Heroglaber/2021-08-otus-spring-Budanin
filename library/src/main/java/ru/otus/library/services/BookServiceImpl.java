@@ -14,7 +14,6 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
-@Transactional
 public class BookServiceImpl implements BookService{
     private final BookRepository bookRepository;
 
@@ -23,6 +22,7 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Book> getAllBooks() {
         List<Book> books = bookRepository.findAll();
         if(books.size() == 0) {
@@ -37,6 +37,7 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Book findBookById(long id) {
         Optional<Book> optional = bookRepository.findById(id);
         if(optional.isEmpty()){
@@ -50,6 +51,7 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Book findBookByTitle(String title) {
         List<Book> books = bookRepository.findByTitle(title);
         if(books.size() == 0) {
@@ -66,6 +68,7 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
+    @Transactional
     public Book addBook(Book book) {
         if(bookRepository.findById(book.getId()).isPresent()){
             throw new IllegalArgumentException("The book is already in the library.");
@@ -74,6 +77,7 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
+    @Transactional
     public Book addBookAuthor(Book book, Author author) {
         if(bookRepository.findById(book.getId()).isEmpty()){
             throw new IllegalArgumentException("You are trying to add an author to a non-existent book.");
@@ -86,6 +90,7 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
+    @Transactional
     public Book addBookGenre(Book book, Genre genre) {
         if(bookRepository.findById(book.getId()).isEmpty()){
             throw new IllegalArgumentException("You are trying to add a genre to a non-existent book.");
@@ -98,6 +103,7 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
+    @Transactional
     public Book addBookComment(Book book, Comment comment) {
         if(bookRepository.findById(book.getId()).isEmpty()){
             throw new IllegalArgumentException("You are trying to add a comment to a non-existent book.");
@@ -110,12 +116,14 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
+    @Transactional
     public Book changeBookTitle(Book book, String newTitle) {
         book.setTitle(newTitle);
         return bookRepository.save(book);
     }
 
     @Override
+    @Transactional
     public Book deleteBookAuthor(Book book, Author author) {
         if(bookRepository.findById(book.getId()).isEmpty()){
             throw new IllegalArgumentException("You are trying to delete an author to a non-existent book.");
@@ -128,6 +136,7 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
+    @Transactional
     public Book deleteBookGenre(Book book, Genre genre) {
         if(bookRepository.findById(book.getId()).isEmpty()){
             throw new IllegalArgumentException("You are trying to delete a genre to a non-existent book.");
@@ -140,6 +149,7 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
+    @Transactional
     public Book deleteBookComment(Book book, Comment comment) {
         if(bookRepository.findById(book.getId()).isEmpty()){
             throw new IllegalArgumentException("You are trying to delete a genre to a non-existent book.");
@@ -152,12 +162,12 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
+    @Transactional
     public Book deleteBookById(long id) {
         Book book = null;
-        Optional optional = bookRepository.findById(id);
+        Optional<Book> optional = bookRepository.findById(id);
         if (optional.isPresent()) {
-            book = bookRepository.findById(id).get();
-            bookRepository.deleteById(id);
+            book = optional.get();
         }
         return book;
     }
