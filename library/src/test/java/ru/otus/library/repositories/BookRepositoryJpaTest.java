@@ -13,6 +13,8 @@ import ru.otus.library.models.Book;
 import ru.otus.library.models.Comment;
 import ru.otus.library.models.Genre;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,11 +50,11 @@ public class BookRepositoryJpaTest {
         val genre1 = new Genre(0, NEW_GENRE_NAME_FIRST);
         val genre2 = new Genre(0, NEW_GENRE_NAME_SECOND);
         List<Genre> genres = List.of(genre1, genre2);
-        val comment1 = new Comment(0, "Great book!!1");
-        val comment2 = new Comment(0, "Read`t in one breathe.");
-        List<Comment> comments = List.of(comment1, comment2);
-
-        val book = new Book(0, NEW_BOOK_NAME, comments, authors, genres);
+        val book = new Book(0, NEW_BOOK_NAME, new ArrayList<>(), authors, genres);
+        val comment1 = new Comment(0, book, "Great book!!1");
+        val comment2 = new Comment(0, book, "Read`t in one breathe.");
+        book.getComments().add(comment1);
+        book.getComments().add(comment2);
         bookRepository.save(book);
         em.flush();
         em.detach(book);
