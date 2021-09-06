@@ -168,6 +168,7 @@ public class BookServiceImpl implements BookService{
         Optional<Book> optional = bookRepository.findById(id);
         if (optional.isPresent()) {
             book = optional.get();
+            bookRepository.deleteById(id);
         }
         return book;
     }
