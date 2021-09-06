@@ -23,7 +23,7 @@ public class LibraryCommands {
 
     @ShellMethod(value = "List of all books.", key = {"list", "l", "all"})
     String getAllBooks() {
-        List<Book> books = bookService.getAll();
+        List<Book> books = bookService.findAll();
         return books.toString();
     }
 

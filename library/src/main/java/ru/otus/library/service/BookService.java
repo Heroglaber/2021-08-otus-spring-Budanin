@@ -10,7 +10,7 @@ public interface BookService {
 
     Book findByTitle(String title);
 
-    List<Book> getAll();
+    List<Book> findAll();
 
     Book add(Book book);
 
