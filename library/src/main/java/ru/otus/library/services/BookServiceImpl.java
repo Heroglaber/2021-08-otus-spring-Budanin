@@ -1,58 +1,69 @@
 package ru.otus.library.services;
 
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.library.dto.BookDto;
 import ru.otus.library.models.Author;
 import ru.otus.library.models.Book;
 import ru.otus.library.models.Comment;
 import ru.otus.library.models.Genre;
 import ru.otus.library.repositories.BookRepository;
+import ru.otus.library.repositories.CommentRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BookServiceImpl implements BookService{
     private final BookRepository bookRepository;
+    private final CommentRepository commentRepository;
 
-    public BookServiceImpl(BookRepository bookRepository) {
+    public BookServiceImpl(BookRepository bookRepository, CommentRepository commentRepository) {
         this.bookRepository = bookRepository;
+        this.commentRepository = commentRepository;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Book> getAllBooks() {
+    public List<BookDto> getAllBooks() {
+        List<BookDto> bookDtos = new ArrayList<>();
+
         List<Book> books = bookRepository.findAll();
+        List<Comment> comments = commentRepository.findAll();
         if(books.size() == 0) {
             throw new NoSuchElementException("There is no book in the library.");
         }
         books.forEach(book -> {
-            Hibernate.initialize(book.getComments());
-            Hibernate.initialize(book.getGenres());
-            Hibernate.initialize(book.getAuthors());
+            BookDto bookDto = mapToBookDto(book);
+            List<Comment> bookComments = comments.stream()
+                    .filter(comment -> {return comment.getBook().getId() == book.getId();}).collect(Collectors.toList());
+            bookDto.setComments(bookComments);
+            bookDtos.add(bookDto);
         });
-        return books;
+        return bookDtos;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Book findBookById(long id) {
+    public BookDto findBookById(long id) {
         Optional<Book> optional = bookRepository.findById(id);
         if(optional.isEmpty()){
             throw new IllegalArgumentException("Book with this id not found.");
         }
         Book book = optional.get();
-        Hibernate.initialize(book.getComments());
-        Hibernate.initialize(book.getGenres());
-        Hibernate.initialize(book.getAuthors());
-        return book;
+        List<Comment> comments = commentRepository.findByBook(book);
+
+        BookDto bookDto = mapToBookDto(book);
+        bookDto.setComments(comments);
+        return bookDto;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Book findBookByTitle(String title) {
+    public BookDto findBookByTitle(String title) {
         List<Book> books = bookRepository.findByTitle(title);
         if(books.size() == 0) {
             throw new NoSuchElementException("There is no book with that title in the library.");
@@ -61,115 +72,172 @@ public class BookServiceImpl implements BookService{
             throw new IllegalStateException("Several books with that title found in the library");
         }
         Book book = books.get(0);
-        Hibernate.initialize(book.getComments());
-        Hibernate.initialize(book.getGenres());
-        Hibernate.initialize(book.getAuthors());
-        return book;
+        List<Comment> comments = commentRepository.findByBook(book);
+
+        BookDto bookDto = mapToBookDto(book);
+        bookDto.setComments(comments);
+        return bookDto;
     }
 
     @Override
     @Transactional
-    public Book addBook(Book book) {
+    public BookDto addBook(BookDto bookDto) {
+        Book book = bookDto.extractBook();
         if(bookRepository.findById(book.getId()).isPresent()){
             throw new IllegalArgumentException("The book is already in the library.");
         }
-        return bookRepository.save(book);
+        book = bookRepository.save(book);
+        for(Comment comment: bookDto.getComments()) {
+            comment.setBook(book);
+            commentRepository.save(comment);
+        }
+        bookDto.setId(book.getId());
+        return bookDto;
     }
 
     @Override
     @Transactional
-    public Book addBookAuthor(Book book, Author author) {
-        if(bookRepository.findById(book.getId()).isEmpty()){
+    public BookDto addBookAuthor(BookDto bookDto, Author author) {
+        Optional<Book> optional = bookRepository.findById(bookDto.getId());
+        if(optional.isEmpty()){
             throw new IllegalArgumentException("You are trying to add an author to a non-existent book.");
         }
+        Book book = optional.get();
         if(book.getAuthors().contains(author)) {
             throw new IllegalArgumentException("The book is already have this author.");
         }
         book.getAuthors().add(author);
-        return bookRepository.save(book);
+        book = bookRepository.save(book);
+
+        bookDto.setAuthors(book.getAuthors());
+        return bookDto;
     }
 
     @Override
     @Transactional
-    public Book addBookGenre(Book book, Genre genre) {
-        if(bookRepository.findById(book.getId()).isEmpty()){
+    public BookDto addBookGenre(BookDto bookDto, Genre genre) {
+        Optional<Book> optional = bookRepository.findById(bookDto.getId());
+        if(optional.isEmpty()){
             throw new IllegalArgumentException("You are trying to add a genre to a non-existent book.");
         }
+        Book book = optional.get();
         if(book.getGenres().contains(genre)) {
             throw new IllegalArgumentException("The book is already have this genre.");
         }
         book.getGenres().add(genre);
-        return bookRepository.save(book);
+        book = bookRepository.save(book);
+
+        bookDto.setGenres(book.getGenres());
+        return bookDto;
     }
 
     @Override
     @Transactional
-    public Book addBookComment(Book book, Comment comment) {
-        if(bookRepository.findById(book.getId()).isEmpty()){
+    public BookDto addBookComment(BookDto bookDto, Comment comment) {
+        Optional<Book> optional = bookRepository.findById(bookDto.getId());
+        if(optional.isEmpty()){
             throw new IllegalArgumentException("You are trying to add a comment to a non-existent book.");
         }
-        if(book.getComments().contains(comment)) {
-            throw new IllegalArgumentException("The book is already have this comment.");
+        Book book = optional.get();
+        comment.setBook(book);
+
+        commentRepository.save(comment);
+
+        bookDto.getComments().add(comment);
+        return bookDto;
+    }
+
+    @Override
+    @Transactional
+    public BookDto changeBookTitle(BookDto bookDto, String newTitle) {
+        Optional<Book> optional = bookRepository.findById(bookDto.getId());
+        if(optional.isEmpty()){
+            throw new IllegalArgumentException("You are trying to change title to a non-existent book.");
         }
-        book.getComments().add(comment);
-        return bookRepository.save(book);
-    }
-
-    @Override
-    @Transactional
-    public Book changeBookTitle(Book book, String newTitle) {
+        Book book = optional.get();
         book.setTitle(newTitle);
-        return bookRepository.save(book);
+        book = bookRepository.save(book);
+
+        bookDto.setTitle(book.getTitle());
+        return bookDto;
     }
 
     @Override
     @Transactional
-    public Book deleteBookAuthor(Book book, Author author) {
-        if(bookRepository.findById(book.getId()).isEmpty()){
+    public BookDto deleteBookAuthor(BookDto bookDto, Author author) {
+        Optional<Book> optional = bookRepository.findById(bookDto.getId());
+        if(optional.isEmpty()){
             throw new IllegalArgumentException("You are trying to delete an author to a non-existent book.");
         }
+        Book book = optional.get();
         if(!book.getAuthors().contains(author)) {
             throw new IllegalArgumentException("This book does not have such an author.");
         }
         book.getAuthors().remove(author);
-        return bookRepository.save(book);
+        book = bookRepository.save(book);
+
+        bookDto.setAuthors(book.getAuthors());
+        return bookDto;
     }
 
     @Override
     @Transactional
-    public Book deleteBookGenre(Book book, Genre genre) {
-        if(bookRepository.findById(book.getId()).isEmpty()){
+    public BookDto deleteBookGenre(BookDto bookDto, Genre genre) {
+        Optional<Book> optional = bookRepository.findById(bookDto.getId());
+        if(optional.isEmpty()){
             throw new IllegalArgumentException("You are trying to delete a genre to a non-existent book.");
         }
+        Book book = optional.get();
         if(!book.getGenres().contains(genre)) {
             throw new IllegalArgumentException("This book does not have such a genre.");
         }
         book.getGenres().remove(genre);
-        return bookRepository.save(book);
+        book = bookRepository.save(book);
+
+        bookDto.setGenres(book.getGenres());
+        return bookDto;
     }
 
     @Override
     @Transactional
-    public Book deleteBookComment(Book book, Comment comment) {
-        if(bookRepository.findById(book.getId()).isEmpty()){
-            throw new IllegalArgumentException("You are trying to delete a genre to a non-existent book.");
+    public BookDto deleteBookComment(BookDto bookDto, Comment comment) {
+        Optional<Book> optional = bookRepository.findById(bookDto.getId());
+        if(optional.isEmpty()){
+            throw new IllegalArgumentException("You are trying to delete a comment to a non-existent book.");
         }
-        if(!book.getComments().contains(comment)) {
-            throw new IllegalArgumentException("This book does not have such a genre.");
+        if(!bookDto.getComments().contains(comment)) {
+            throw new IllegalArgumentException("Book does not contains this comment");
         }
-        book.getComments().remove(comment);
-        return bookRepository.save(book);
+        commentRepository.deleteById(comment.getId());
+
+        bookDto.getComments().remove(comment);
+        return bookDto;
     }
 
     @Override
     @Transactional
-    public Book deleteBookById(long id) {
-        Book book = null;
+    public BookDto deleteBookById(long id) {
         Optional<Book> optional = bookRepository.findById(id);
-        if (optional.isPresent()) {
-            book = optional.get();
-            bookRepository.deleteById(id);
+        if(optional.isEmpty()){
+            throw new IllegalArgumentException("You are trying to delete a non-existent book.");
         }
-        return book;
+        Book book = optional.get();
+        List<Comment> comments = commentRepository.findByBook(book);
+        for(Comment comment: comments) {
+            commentRepository.deleteById(comment.getId());
+        }
+        bookRepository.deleteById(id);
+        BookDto bookDto = mapToBookDto(book);
+        bookDto.setComments(comments);
+        return bookDto;
+    }
+
+    private BookDto mapToBookDto(Book book) {
+        BookDto bookDto = new BookDto();
+        bookDto.setId(book.getId());
+        bookDto.setTitle(book.getTitle());
+        bookDto.setAuthors(book.getAuthors());
+        bookDto.setGenres(book.getGenres());
+        return bookDto;
     }
 }

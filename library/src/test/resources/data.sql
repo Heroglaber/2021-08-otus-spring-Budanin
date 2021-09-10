@@ -30,6 +30,8 @@ insert into books (id, title) values (10, 'Bird Box');
 
 insert into comments(book_id, message) values (1, 'Greatest book ever!');
 insert into comments(book_id, message) values (1, 'I read this book as a child.');
+insert into comments(book_id, message) values (8, 'Scary book!');
+insert into comments(book_id, message) values (8, 'JUST AMAZING');
 
 insert into book_authors (book_id, author_id) values (1, 1);
 insert into book_authors (book_id, author_id) values (1, 2);

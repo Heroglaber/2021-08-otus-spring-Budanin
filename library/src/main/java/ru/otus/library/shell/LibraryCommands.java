@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import ru.otus.library.dto.BookDto;
 import ru.otus.library.models.Author;
-import ru.otus.library.models.Book;
 import ru.otus.library.models.Comment;
 import ru.otus.library.models.Genre;
 import ru.otus.library.services.BookService;
@@ -24,7 +24,8 @@ public class LibraryCommands {
                       @ShellOption(defaultValue = "") String author,
                       @ShellOption(defaultValue = "") String comment) {
 
-        Book book = new Book(title);
+        BookDto book = new BookDto();
+        book.setTitle(title);
         if(comment != null && !comment.isEmpty()) {
             book.setComments(List.of(new Comment(comment)));
         }
@@ -40,13 +41,13 @@ public class LibraryCommands {
 
     @ShellMethod(value = "Show all books. usage: all", key = {"all", "list", "l"})
     String findAllBooks() {
-        List<Book> books = bookService.getAllBooks();
+        List<BookDto> books = bookService.getAllBooks();
         return books.toString();
     }
 
     @ShellMethod(value = "Find a book by title. usage: find --title 'New Book Title'", key = {"find", "f"})
     String findBookByTitle(@ShellOption String title) {
-        Book book = bookService.findBookByTitle(title);
+        BookDto book = bookService.findBookByTitle(title);
         return book.toString();
     }
 
@@ -56,7 +57,7 @@ public class LibraryCommands {
                       @ShellOption(defaultValue = "") String genre,
                       @ShellOption(defaultValue = "") String author,
                       @ShellOption(defaultValue = "") String comment) {
-        Book book = bookService.findBookById(id);
+        BookDto book = bookService.findBookById(id);
         if(title != null && !title.isEmpty())
             {bookService.changeBookTitle(book, title);}
         if(comment != null && !comment.isEmpty())
@@ -72,7 +73,7 @@ public class LibraryCommands {
     String addAuthor(@ShellOption(value = "--delete", defaultValue = "false") String delete,
                      @ShellOption("--id") long bookId,
                      @ShellOption("--name") String name) {
-        Book book = bookService.findBookById(bookId);
+        BookDto book = bookService.findBookById(bookId);
         if(delete.equals("false")) {
             bookService.addBookAuthor(book, new Author(name));
             return "Author was added successfully";
@@ -87,7 +88,7 @@ public class LibraryCommands {
     String addGenre(@ShellOption(value = "--delete", defaultValue = "false") String delete,
                      @ShellOption("--id") long bookId,
                      @ShellOption("--name") String genre) {
-        Book book = bookService.findBookById(bookId);
+        BookDto book = bookService.findBookById(bookId);
         if(delete.equals("false")) {
             bookService.addBookGenre(book, new Genre(genre));
             return "Genre was added successfully";
@@ -102,7 +103,7 @@ public class LibraryCommands {
     String addComment(@ShellOption(value = "--delete", defaultValue = "false") String delete,
                     @ShellOption("--id") long bookId,
                     @ShellOption("--name") String comment) {
-        Book book = bookService.findBookById(bookId);
+        BookDto book = bookService.findBookById(bookId);
         if(delete.equals("false")) {
             bookService.addBookComment(book, new Comment(comment));
             return "Comment was added successfully";
@@ -115,7 +116,7 @@ public class LibraryCommands {
 
     @ShellMethod(value = "Delete book by title. usage: d --title 'Book Title'", key = {"d","delete"})
     String deleteBook(String title) {
-        Book book = bookService.findBookByTitle(title);
+        BookDto book = bookService.findBookByTitle(title);
         bookService.deleteBookById(book.getId());
         return "Book successfully removed from library";
     }

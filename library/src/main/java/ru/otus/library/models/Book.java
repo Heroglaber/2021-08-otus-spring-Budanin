@@ -2,7 +2,6 @@ package ru.otus.library.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -13,7 +12,6 @@ import java.util.List;
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 @Entity
 @Table(name = "books")
 @NamedEntityGraph(name = "book-authors-graph",
@@ -25,11 +23,6 @@ public class Book {
 
     @Column(name = "title", nullable = false, unique = true)
     private String title;
-
-    @OneToMany(targetEntity = Comment.class, fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "book_id")
-    private List<Comment> comments;
 
     @ManyToMany(targetEntity = Author.class, fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
