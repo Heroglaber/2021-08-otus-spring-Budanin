@@ -59,7 +59,7 @@ public class GenreDaoJdbc implements GenreDao{
         Map<String, Object> params = Collections.singletonMap("id", id);
         try {
             return jdbc.queryForObject(
-                    "select id, name from genres where id = :id", params, new GenreDaoJdbc.GenreRowMapper()
+                    "select id, name from genres where id = :id", params, new GenreRowMapper()
             );
         }
         catch (EmptyResultDataAccessException e) {
@@ -72,7 +72,7 @@ public class GenreDaoJdbc implements GenreDao{
         Map<String, Object> params = Collections.singletonMap("name", name);
         try {
             return jdbc.queryForObject(
-                    "select top 1 id, name from genres where name = :name", params, new GenreDaoJdbc.GenreRowMapper()
+                    "select top 1 id, name from genres where name = :name", params, new GenreRowMapper()
             );
         }
         catch (EmptyResultDataAccessException e) {
@@ -83,7 +83,7 @@ public class GenreDaoJdbc implements GenreDao{
     @Override
     public List<Genre> getAll() {
         try {
-            return jdbc.query("select id, name from genres", new GenreDaoJdbc.GenreRowMapper());
+            return jdbc.query("select id, name from genres", new GenreRowMapper());
         }
         catch (EmptyResultDataAccessException e) {
             return Collections.emptyList();
