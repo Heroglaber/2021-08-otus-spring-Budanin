@@ -94,7 +94,7 @@ public class BookServiceIntegrationTest {
 
         Book actualBook = bookService.findById(EXISTING_BOOK_ID_2);
         assertThat(actualBook.getTitle()).isEqualTo(NEW_TITLE);
-        assertThat(actualBook.getAuthors()).extracting(Author::getName).containsExactlyInAnyOrder(FIRST_AUTHOR, SECOND_AUTHOR, THIRD_AUTHOR);
+        assertThat(actualBook.getAuthors()).extracting(Author::getName).containsExactlyInAnyOrder(THIRD_AUTHOR);
         assertThat(actualBook.getGenre()).extracting(Genre::getName).isEqualTo(GENRE_NAME);
     }
 

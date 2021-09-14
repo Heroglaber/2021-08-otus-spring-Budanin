@@ -11,6 +11,7 @@ import ru.otus.library.service.AuthorService;
 import ru.otus.library.service.BookService;
 import ru.otus.library.service.GenreService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,11 +33,15 @@ public class LibraryCommands {
                            @ShellOption(defaultValue = "") String title) {
         if(id != 0) {
             Book book = bookService.findById(id);
-            return book.toString();
+            if(book != null) {
+                return book.toString();
+            }
         }
         if(title != "") {
             Book book = bookService.findByTitle(title);
-            return book.toString();
+            if(book != null) {
+                return book.toString();
+            }
         }
         return "Book not found in library";
     }
@@ -69,34 +74,24 @@ public class LibraryCommands {
             book.setTitle(title);
         }
         if(!genreName.isEmpty()) {
-            Genre genre = null;
-            if(genreService.findByName(genreName) == null) {
-                genre = genreService.add(new Genre(genreName));
-            }
-            else {
-                genre = genreService.findByName(genreName);
-            }
+            Genre genre = new Genre(genreName);
             if(!book.getGenre().equals(genre)) {
                 book.setGenre(genre);
             }
         }
         if(!authorName.isEmpty()) {
-            Author author = null;
-            if(authorService.findByName(authorName) == null) {
-                author = authorService.add(new Author(authorName));
-            }
-            else {
-                author = authorService.findByName(authorName);
-            }
+            Author author = new Author(authorName);
+            ArrayList<Author> authors = new ArrayList<>();
+            authors.add(author);
             if(!book.getAuthors().contains(author)) {
-                book.getAuthors().add(author);
+                book.setAuthors(authors);
             }
         }
         bookService.update(book);
         return "Book successfully updated";
     }
 
-    @ShellMethod(value = "Add or delete book author. usage: author --bookId 2 --name 'Third Author'", key = {"author", "a"})
+    @ShellMethod(value = "Add or delete book author. usage: author --bookId 3 --name 'Third Author'", key = {"author", "a"})
     String addAuthor(@ShellOption(value = "--delete", defaultValue = "false") boolean delete,
                      @ShellOption("--bookId") long id,
                      @ShellOption("--name") String name) {

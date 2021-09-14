@@ -12,6 +12,7 @@ import ru.otus.library.domain.Author;
 import javax.management.openmbean.InvalidKeyException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -32,12 +33,32 @@ public class AuthorDaoJdbc implements AuthorDao{
 
     @Override
     public Author insert(Author author) {
+        if (author.getId() > 0) {
+            throw new InvalidKeyException("Author have ID. Maybe he is already in repository?");
+        }
         KeyHolder kh = new GeneratedKeyHolder();
         MapSqlParameterSource params =
                 new MapSqlParameterSource(Map.of( "name", author.getName()));
         jdbc.update("insert into authors (name) values (:name)", params, kh);
         author.setId(kh.getKey().longValue());
         return author;
+    }
+
+    @Override
+    public int[] batchInsert(final List<Author> authors) {
+        String sql = "insert into authors (name) values (:name)";
+        List<Map<String, Object>> batchValues = new ArrayList<>(authors.size());
+        for (Author author: authors) {
+            if(author.getId() > 0) {
+                throw new IllegalArgumentException("Author have ID. Maybe he is already in repository?");
+            }
+            batchValues.add(
+                    new MapSqlParameterSource("name", author.getName())
+                            .getValues());
+        }
+        int[] updateCounts = jdbc.batchUpdate(sql,
+                batchValues.toArray(new Map[authors.size()]));
+        return updateCounts;
     }
 
     @Override
@@ -52,6 +73,24 @@ public class AuthorDaoJdbc implements AuthorDao{
                 ));
         jdbc.update("update authors set name=:name where id=:id", params);
         return author;
+    }
+
+    @Override
+    public int[] batchUpdate(final List<Author> authors) {
+        String sql = "update authors set name=:name where id=:id";
+        List<Map<String, Object>> batchValues = new ArrayList<>(authors.size());
+        for (Author author: authors) {
+            if(author.getId() <= 0) {
+                throw new InvalidKeyException("Author id is not specified.");
+            }
+            batchValues.add(
+                    new MapSqlParameterSource("id", author.getId())
+                    .addValue("name", author.getName())
+                    .getValues());
+        }
+        int[] updateCounts = jdbc.batchUpdate(sql,
+                batchValues.toArray(new Map[authors.size()]));
+        return updateCounts;
     }
 
     @Override

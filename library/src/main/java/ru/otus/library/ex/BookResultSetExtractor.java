@@ -9,14 +9,12 @@ import ru.otus.library.domain.Genre;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class BookResultSetExtractor  implements
-        ResultSetExtractor<Map<Long, Book>> {
+        ResultSetExtractor<List<Book>> {
     @Override
-    public Map<Long, Book> extractData(ResultSet rs) throws SQLException, DataAccessException {
+    public List<Book> extractData(ResultSet rs) throws SQLException, DataAccessException {
         Map<Long, Book> books = new HashMap<>();
         while (rs.next()) {
             long id = rs.getLong("id");
@@ -32,7 +30,7 @@ public class BookResultSetExtractor  implements
                         , rs.getString("authorName")));
             }
         }
-        return books;
+        return new ArrayList<>(Objects.requireNonNull(books).values());
     }
 
     public static boolean hasColumn(ResultSet rs, String columnName) throws SQLException {

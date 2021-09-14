@@ -38,10 +38,9 @@ class AuthorDaoJdbcTest {
     @DisplayName("insert author in database")
     @Test
     void shouldInsertAuthor() {
-        Author expectedAuthor = new Author(3, "Igor");
-        authorDao.insert(expectedAuthor);
-        Author actualAuthor = authorDao.getById(expectedAuthor.getId());
-        assertThat(actualAuthor).usingRecursiveComparison().isEqualTo(expectedAuthor);
+        Author insertedAuthor = authorDao.insert(new Author("Igor"));
+        Author actualAuthor = authorDao.getById(insertedAuthor.getId());
+        assertThat(actualAuthor).usingRecursiveComparison().isEqualTo(insertedAuthor);
     }
 
     @DisplayName("return expected author by id")

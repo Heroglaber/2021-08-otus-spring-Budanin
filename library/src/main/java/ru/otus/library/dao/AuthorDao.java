@@ -9,7 +9,11 @@ public interface AuthorDao {
 
     Author insert(Author author);
 
+    int[] batchInsert(List<Author> authors);
+
     Author update(Author author);
+
+    int[] batchUpdate(List<Author> authors);
 
     Author getById(long id);
 
