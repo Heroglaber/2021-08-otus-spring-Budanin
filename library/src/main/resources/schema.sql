@@ -1,26 +1,26 @@
 drop table if exists authors;
 create table authors (
     id bigserial,
-    name varchar(800),
+    name varchar(800) not null unique,
     primary key (id)
 );
 drop table if exists genres;
 create table genres (
     id bigserial,
-    name varchar(800),
+    name varchar(800) not null unique,
     primary key (id)
 );
 drop table if exists books;
 create table books (
     id bigserial,
-    title varchar(800),
+    title varchar(800) not null,
     primary key (id)
 );
 drop table if exists comments;
 create table comments (
     id bigserial,
     book_id bigint references books(id) on delete cascade,
-    message varchar(5000),
+    message varchar(5000) not null,
     primary key (id)
 );
 drop table if exists book_authors;

@@ -1,16 +1,15 @@
-package ru.otus.library.models;
+package ru.otus.library.models.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
+@ToString
 @RequiredArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
+@NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 @Entity
 @Table(name = "authors")
 public class Author {
@@ -18,10 +17,7 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NonNull
     @Column(name = "name", nullable = false, unique = true)
     private String name;
-
-    public Author(String name) {
-        this.name = name;
-    }
 }
