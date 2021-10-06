@@ -61,12 +61,10 @@ public class BookRepositoryJpaTest {
     @DisplayName("find book by id")
     @Test
     void shouldFindBookById() {
-        long id = EXISTING_BOOK_ID;
-        String name = EXISING_BOOK_TITLE;
-        Book expectedBook = new Book(name);
-        expectedBook.setId(id);
+        Book expectedBook = new Book(EXISING_BOOK_TITLE);
+        expectedBook.setId(EXISTING_BOOK_ID);
 
-        Book actualBook = bookRepository.findById(id).orElseThrow();
+        Book actualBook = bookRepository.findById(EXISTING_BOOK_ID).orElseThrow();
 
         assertThat(expectedBook).usingRecursiveComparison().ignoringAllOverriddenEquals()
                 .ignoringFields("authors", "genres").isEqualTo(actualBook);
@@ -75,12 +73,10 @@ public class BookRepositoryJpaTest {
     @DisplayName("find book by title")
     @Test
     void shouldFindBookByName() {
-        long id = EXISTING_BOOK_ID;
-        String title = EXISING_BOOK_TITLE;
-        Book expectedBook = new Book(title);
-        expectedBook.setId(id);
+        Book expectedBook = new Book(EXISING_BOOK_TITLE);
+        expectedBook.setId(EXISTING_BOOK_ID);
 
-        Book actualBook = bookRepository.findByTitle(title).get(0);
+        Book actualBook = bookRepository.findByTitle(EXISING_BOOK_TITLE).get(0);
 
         assertThat(expectedBook).usingRecursiveComparison().ignoringAllOverriddenEquals()
                 .ignoringFields("authors", "genres").isEqualTo(actualBook);
@@ -97,13 +93,12 @@ public class BookRepositoryJpaTest {
     @DisplayName("delete book by id")
     @Test
     void deleteById(){
-        long id = EXISTING_BOOK_ID;
-        Book deletedBook = em.find(Book.class, id);
+        Book deletedBook = em.find(Book.class, EXISTING_BOOK_ID);
         assertThat(deletedBook).isNotNull().extracting("id", "title")
                 .containsExactly(EXISTING_BOOK_ID, EXISING_BOOK_TITLE);
 
-        bookRepository.deleteById(id);
+        bookRepository.deleteById(EXISTING_BOOK_ID);
 
-        assertThat(em.find(Book.class, id)).isNull();
+        assertThat(em.find(Book.class, EXISTING_BOOK_ID)).isNull();
     }
 }

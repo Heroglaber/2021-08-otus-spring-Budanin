@@ -2,7 +2,6 @@ package ru.otus.library.services;
 
 import ru.otus.library.models.dto.AuthorDTO;
 import ru.otus.library.models.dto.BookDTO;
-import ru.otus.library.models.dto.CommentDTO;
 import ru.otus.library.models.dto.GenreDTO;
 
 import java.util.List;

@@ -40,24 +40,20 @@ public class AuthorRepositoryJpaTest {
     @DisplayName("find author by id")
     @Test
     void shouldFindAuthorById() {
-        long id = EXISING_AUTHOR_ID;
-        String name = EXISTING_AUTHOR_NAME;
-        Author expectedAuthor = new Author(name);
-        expectedAuthor.setId(id);
+        Author expectedAuthor = new Author(EXISTING_AUTHOR_NAME);
+        expectedAuthor.setId(EXISING_AUTHOR_ID);
 
-        Author actualAuthor = authorRepository.findById(id).orElseThrow();
+        Author actualAuthor = authorRepository.findById(EXISING_AUTHOR_ID).orElseThrow();
         assertThat(expectedAuthor).usingRecursiveComparison().ignoringAllOverriddenEquals().isEqualTo(actualAuthor);
     }
 
     @DisplayName("find author by name")
     @Test
     void shouldFindAuthorByName() {
-        long id = EXISING_AUTHOR_ID;
-        String name = EXISTING_AUTHOR_NAME;
-        Author expectedAuthor = new Author(name);
-        expectedAuthor.setId(id);
+        Author expectedAuthor = new Author(EXISTING_AUTHOR_NAME);
+        expectedAuthor.setId(EXISING_AUTHOR_ID);
 
-        Author actualAuthor = authorRepository.findByName(name).orElseThrow();
+        Author actualAuthor = authorRepository.findByName(EXISTING_AUTHOR_NAME).orElseThrow();
         assertThat(expectedAuthor).usingRecursiveComparison().ignoringAllOverriddenEquals().isEqualTo(actualAuthor);
     }
 

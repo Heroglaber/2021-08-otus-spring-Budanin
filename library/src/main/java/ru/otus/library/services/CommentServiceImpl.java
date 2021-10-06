@@ -28,7 +28,11 @@ public class CommentServiceImpl implements CommentService{
     @Override
     @Transactional(readOnly = true)
     public List<CommentDTO> getAllByBookId(long bookId) {
-        return commentMapper.toCommentDTOList(commentRepository.findAllByBook_Id(bookId));
+        List<Comment> comments = commentRepository.findAllByBook_Id(bookId);
+        if(comments.isEmpty()) {
+            throw new RuntimeException("Comments not found for this book.");
+        }
+        return commentMapper.toCommentDTOList(comments);
     }
 
     @Override
@@ -43,7 +47,7 @@ public class CommentServiceImpl implements CommentService{
     @Transactional
     public CommentDTO add(CommentDTO commentDTO) {
         Comment comment = commentMapper.toComment(commentDTO);
-        commentRepository.save(comment);
+        comment = commentRepository.save(comment);
         return commentMapper.toCommentDTO(comment);
     }
 
@@ -51,7 +55,7 @@ public class CommentServiceImpl implements CommentService{
     @Transactional
     public List<CommentDTO> addAll(List<CommentDTO> commentsDTOs) {
         List<Comment> comments = commentMapper.toCommentList(commentsDTOs);
-        commentRepository.saveAll(comments);
+        comments = commentRepository.saveAll(comments);
         return commentMapper.toCommentDTOList(comments);
     }
 
@@ -63,6 +67,7 @@ public class CommentServiceImpl implements CommentService{
                 .orElseThrow();
         target.setBook(source.getBook());
         target.setMessage(source.getMessage());
+        target = commentRepository.save(target);
         return commentMapper.toCommentDTO(target);
     }
 

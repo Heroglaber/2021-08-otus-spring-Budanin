@@ -1,5 +1,6 @@
 package ru.otus.library.shell;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -8,13 +9,12 @@ import ru.otus.library.models.dto.AuthorDTO;
 import ru.otus.library.models.dto.BookDTO;
 import ru.otus.library.models.dto.CommentDTO;
 import ru.otus.library.models.dto.GenreDTO;
-import ru.otus.library.services.AuthorService;
 import ru.otus.library.services.BookService;
 import ru.otus.library.services.CommentService;
-import ru.otus.library.services.GenreService;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,8 +23,6 @@ import java.util.Optional;
 public class BookController {
     private final BookService bookService;
     private final CommentService commentService;
-    private final AuthorService authorService;
-    private final GenreService genreService;
 
     @ShellMethod(value = "Save book. usage: i --title 'New Book Title' --genre 'classic' --author 'First Author' --comment 'Great Book!'"
             , key = {"book add", "i", "add", "b a"})
@@ -35,12 +33,12 @@ public class BookController {
 
         BookDTO bookDTO = new BookDTO(title);
         if(!genre.isBlank()) {
-            GenreDTO genreDTO = genreService.getOrAdd(genre);
-            bookDTO.setGenres(List.of(genreDTO));
+            GenreDTO genreDTO = new GenreDTO(genre);
+            bookDTO.addGenre(genreDTO);
         }
         if(!author.isBlank()) {
-            AuthorDTO authorDTO = authorService.getOrAdd(author);
-            bookDTO.setAuthors(List.of(authorDTO));
+            AuthorDTO authorDTO = new AuthorDTO(author);
+            bookDTO.addAuthor(authorDTO);
         }
         bookDTO = bookService.add(bookDTO);
 
@@ -51,7 +49,7 @@ public class BookController {
     }
 
     @ShellMethod(value = "Show all books. usage: all", key = {"all", "list", "l"})
-    String findAllBooks() {
+    String findAllBooks() throws JsonProcessingException {
         List<BookDTO> books = bookService.getAll();
         return books.toString();
     }
@@ -74,12 +72,12 @@ public class BookController {
             bookDTO.setTitle(title);
         }
         if(!genre.isBlank()) {
-            GenreDTO genreDTO = genreService.getOrAdd(genre);
-            bookDTO.setGenres(List.of(genreDTO));
+            GenreDTO genreDTO = new GenreDTO(genre);
+            bookDTO.addGenre(genreDTO);
         }
         if(!author.isBlank()) {
-            AuthorDTO authorDTO = authorService.getOrAdd(author);
-            bookDTO.setAuthors(List.of(authorDTO));
+            AuthorDTO authorDTO = new AuthorDTO(author);
+            bookDTO.addAuthor(authorDTO);
         }
         bookDTO = bookService.update(bookDTO);
 
@@ -94,14 +92,8 @@ public class BookController {
     String addAuthor(@ShellOption("--id") @NotNull long bookId,
                      @ShellOption("--name") @NotBlank String name) {
         BookDTO bookDTO = bookService.getById(bookId);
-        AuthorDTO authorDTO = authorService.getOrAdd(name);
-        if(!bookDTO.getAuthors().contains(authorDTO)) {
-            bookDTO.getAuthors().add(authorDTO);
-        }
-        else {
-            throw new RuntimeException("The book already has such an author.");
-        }
-        bookService.update(bookDTO);
+        AuthorDTO authorDTO = new AuthorDTO(name);
+        bookService.addAuthor(bookDTO, authorDTO);
         return "Author was added successfully";
     }
 
@@ -109,14 +101,8 @@ public class BookController {
     String deleteAuthor(@ShellOption("--id") long bookId,
                      @ShellOption("--name") String name) {
         BookDTO bookDTO = bookService.getById(bookId);
-        AuthorDTO authorDTO = authorService.get(name);
-        if(bookDTO.getAuthors().contains(authorDTO)) {
-            bookDTO.getAuthors().remove(authorDTO);
-        }
-        else {
-            throw new RuntimeException("The book does not have such an author.");
-        }
-        bookService.update(bookDTO);
+        AuthorDTO authorDTO = new AuthorDTO(name);
+        bookService.deleteAuthor(bookDTO, authorDTO);
         return "Author was successfully removed";
     }
 
@@ -124,33 +110,21 @@ public class BookController {
     String addGenre(@ShellOption("--id") long bookId,
                      @ShellOption("--name") String name) {
         BookDTO bookDTO = bookService.getById(bookId);
-        GenreDTO genreDTO = genreService.getOrAdd(name);
-        if(!bookDTO.getGenres().contains(genreDTO)) {
-            bookDTO.getGenres().add(genreDTO);
-        }
-        else {
-            throw new RuntimeException("The book already has such a genre.");
-        }
-        bookService.update(bookDTO);
+        GenreDTO genreDTO = new GenreDTO(name);
+        bookService.addGenre(bookDTO, genreDTO);
         return "Genre was added successfully";
     }
 
-    @ShellMethod(value = "Remove book genre. usage: genre delete --id 8 --name 'horror'", key = {"genre delete", "g d", "g r"})
+    @ShellMethod(value = "Remove book genre. usage: ", key = {"genre delete", "g d", "g r"})
     String deleteGenre(@ShellOption("--id") long bookId,
                     @ShellOption("--name") String name) {
         BookDTO bookDTO = bookService.getById(bookId);
-        GenreDTO genreDTO = genreService.getOrAdd(name);
-        if(bookDTO.getGenres().contains(genreDTO)) {
-            bookDTO.getGenres().remove(genreDTO);
-        }
-        else {
-            throw new RuntimeException("The book does not have such a genre.");
-        }
-        bookService.update(bookDTO);
+        GenreDTO genreDTO = new GenreDTO(name);
+        bookService.deleteGenre(bookDTO, genreDTO);
         return "Genre was successfully removed";
     }
 
-    @ShellMethod(value = "Add book comment. usage: comment --id 8 --message 'Great book!'", key = {"comment add", "c a"})
+    @ShellMethod(value = "Add book comment. usage: comment add --id 8 --message 'Great book!'", key = {"comment add", "c a"})
     String addComment(@ShellOption("--id") long bookId,
                     @ShellOption("--message") String message) {
         BookDTO bookDTO = bookService.getById(bookId);
@@ -161,7 +135,7 @@ public class BookController {
         return "Comment was added successfully";
     }
 
-    @ShellMethod(value = "Remove book comment. usage: comment --id 3 --message 'Great book!'", key = {"comment delete", "c d", "c r"})
+    @ShellMethod(value = "Remove book comment. usage: comment delete --id 3 --message 'Great book!'", key = {"comment delete", "c d", "c r"})
     String deleteComment(@ShellOption("--id") long bookId,
                       @ShellOption("--message") String message) {
         List<CommentDTO> comments = commentService.getAllByBookId(bookId);

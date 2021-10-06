@@ -40,24 +40,20 @@ public class GenreRepositoryJpaTest {
     @DisplayName("find genre by id")
     @Test
     void shouldFindGenreById() {
-        long id = EXISING_GENRE_ID;
-        String name = EXISING_GENRE_NAME;
-        Genre expectedGenre = new Genre(name);
-        expectedGenre.setId(id);
+        Genre expectedGenre = new Genre(EXISING_GENRE_NAME);
+        expectedGenre.setId(EXISING_GENRE_ID);
 
-        Genre actualGenre = genreRepository.findById(id).orElseThrow();
+        Genre actualGenre = genreRepository.findById(EXISING_GENRE_ID).orElseThrow();
         assertThat(expectedGenre).usingRecursiveComparison().ignoringAllOverriddenEquals().isEqualTo(actualGenre);
     }
 
     @DisplayName("find genre by name")
     @Test
     void shouldFindGenreByName() {
-        long id = EXISING_GENRE_ID;
-        String name = EXISING_GENRE_NAME;
-        Genre expectedGenre = new Genre(name);
-        expectedGenre.setId(id);
+        Genre expectedGenre = new Genre(EXISING_GENRE_NAME);
+        expectedGenre.setId(EXISING_GENRE_ID);
 
-        Genre actualGenre = genreRepository.findByName(name).orElseThrow();
+        Genre actualGenre = genreRepository.findByName(EXISING_GENRE_NAME).orElseThrow();
         assertThat(expectedGenre).usingRecursiveComparison().ignoringAllOverriddenEquals().isEqualTo(actualGenre);
     }
 
@@ -71,12 +67,11 @@ public class GenreRepositoryJpaTest {
     @DisplayName("delete genre by id")
     @Test
     void deleteById(){
-        long id = EXISING_GENRE_ID;
-        Genre deletedGenre = em.find(Genre.class, id);
+        Genre deletedGenre = em.find(Genre.class, EXISING_GENRE_ID);
         assertThat(deletedGenre).isNotNull().extracting("id", "name")
                 .containsExactly(EXISING_GENRE_ID, EXISING_GENRE_NAME);
 
-        genreRepository.deleteById(id);
-        assertThat(em.find(Genre.class, id)).isNull();
+        genreRepository.deleteById(EXISING_GENRE_ID);
+        assertThat(em.find(Genre.class, EXISING_GENRE_ID)).isNull();
     }
 }

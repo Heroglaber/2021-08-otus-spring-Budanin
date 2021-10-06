@@ -44,13 +44,11 @@ public class CommentRepositoryJpaTest {
     @DisplayName("find comment by id")
     @Test
     void shouldFindCommentById() {
-        long id = EXISTING_COMMENT_ID;
-        String message = EXISING_COMMENT_MESSAGE;
         Book book = em.find(Book.class, EXISTING_BOOK_ID);
-        Comment expectedComment = new Comment(book, message);
-        expectedComment.setId(id);
+        Comment expectedComment = new Comment(book, EXISING_COMMENT_MESSAGE);
+        expectedComment.setId(EXISTING_COMMENT_ID);
 
-        Comment actualComment = commentRepository.findById(id).orElseThrow();
+        Comment actualComment = commentRepository.findById(EXISTING_COMMENT_ID).orElseThrow();
 
         assertThat(expectedComment).usingRecursiveComparison().ignoringAllOverriddenEquals().isEqualTo(actualComment);
     }
@@ -58,13 +56,11 @@ public class CommentRepositoryJpaTest {
     @DisplayName("find comment by message")
     @Test
     void shouldFindCommentByMessage() {
-        long id = EXISTING_COMMENT_ID;
-        String message = EXISING_COMMENT_MESSAGE;
         Book book = em.find(Book.class, EXISTING_BOOK_ID);
-        Comment expectedComment = new Comment(book, message);
-        expectedComment.setId(id);
+        Comment expectedComment = new Comment(book, EXISING_COMMENT_MESSAGE);
+        expectedComment.setId(EXISTING_COMMENT_ID);
 
-        Comment actualComment = commentRepository.findByMessage(message).orElseThrow();
+        Comment actualComment = commentRepository.findByMessage(EXISING_COMMENT_MESSAGE).orElseThrow();
 
         assertThat(expectedComment).usingRecursiveComparison().ignoringAllOverriddenEquals().isEqualTo(actualComment);
     }
@@ -91,13 +87,12 @@ public class CommentRepositoryJpaTest {
     @DisplayName("delete comment by id")
     @Test
     void deleteById(){
-        long id = EXISTING_COMMENT_ID;
-        Comment deletedComment = em.find(Comment.class, id);
+        Comment deletedComment = em.find(Comment.class, EXISTING_COMMENT_ID);
         assertThat(deletedComment).isNotNull().extracting("id", "message")
                 .containsExactly(EXISTING_COMMENT_ID, EXISING_COMMENT_MESSAGE);
 
-        commentRepository.deleteById(id);
+        commentRepository.deleteById(EXISTING_COMMENT_ID);
 
-        assertThat(em.find(Comment.class, id)).isNull();
+        assertThat(em.find(Comment.class, EXISTING_COMMENT_ID)).isNull();
     }
 }

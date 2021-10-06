@@ -4,6 +4,7 @@ import lombok.*;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @RequiredArgsConstructor
 @EqualsAndHashCode(of = {"book", "message"})
@@ -13,9 +14,4 @@ public class CommentDTO {
     private BookDTO book;
     @NonNull
     private String message;
-
-
-    public String toString() {
-        return "CommentDTO(id=" + this.getId() + ", bookTitle=" + this.getBook().getTitle() + ", message=" + this.getMessage() + ")\n";
-    }
 }

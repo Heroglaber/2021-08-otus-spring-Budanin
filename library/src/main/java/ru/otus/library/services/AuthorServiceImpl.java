@@ -38,7 +38,7 @@ public class AuthorServiceImpl implements AuthorService{
     @Transactional
     public AuthorDTO add(String name) {
         Author author = new Author(name);
-        authorRepository.save(author);
+        author = authorRepository.save(author);
         return authorMapper.toAuthorDTO(author);
     }
 
@@ -61,6 +61,7 @@ public class AuthorServiceImpl implements AuthorService{
         Author source = authorMapper.toAuthor(authorDTO);
         Author target = authorRepository.getById(source.getId());
         target.setName(source.getName());
+        target = authorRepository.save(target);
         return authorMapper.toAuthorDTO(target);
     }
 

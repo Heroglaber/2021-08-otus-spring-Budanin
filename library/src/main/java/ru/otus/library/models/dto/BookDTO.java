@@ -1,15 +1,13 @@
 package ru.otus.library.models.dto;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@ToString
 @EqualsAndHashCode(of = {"title", "authors"})
 public class BookDTO {
     private long id;
@@ -24,11 +22,21 @@ public class BookDTO {
         this.genres = new ArrayList<>();
     }
 
+    public void addAuthor(AuthorDTO authorDTO){
+        if(!this.authors.contains(authorDTO)) {
+            this.authors.add(authorDTO);
+        }
+        else {
+            throw new RuntimeException("The book already has such an author.");
+        }
+    }
 
-    public String toString() {
-        return "BookDTO(id=" + this.getId() +
-                ", title=" + this.getTitle() +
-                ", authors=" + this.getAuthors() +
-                ", genres=" + this.getGenres() + ")\n";
+    public void addGenre(GenreDTO genreDTO) {
+        if(!this.genres.contains(genreDTO)) {
+            this.genres.add(genreDTO);
+        }
+        else {
+            throw new RuntimeException("The book already has such a genre.");
+        }
     }
 }
