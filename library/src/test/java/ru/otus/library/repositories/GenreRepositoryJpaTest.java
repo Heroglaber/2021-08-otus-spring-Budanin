@@ -19,10 +19,10 @@ public class GenreRepositoryJpaTest {
     private static final int GENRES_TABLE_SIZE = 6;
 
     @Autowired
-    TestEntityManager em;
+    private TestEntityManager em;
 
     @Autowired
-    GenreRepository genreRepository;
+    private GenreRepository genreRepository;
 
     @DisplayName("correctly save genre")
     @Test

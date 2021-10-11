@@ -21,10 +21,10 @@ public class BookRepositoryJpaTest {
     private static final int BOOKS_TABLE_SIZE = 10;
 
     @Autowired
-    TestEntityManager em;
+    private TestEntityManager em;
 
     @Autowired
-    BookRepository bookRepository;
+    private BookRepository bookRepository;
 
     @DisplayName("correctly save book")
     @Test

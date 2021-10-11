@@ -22,10 +22,10 @@ public class CommentRepositoryJpaTest {
     private static final String EXISING_COMMENT_MESSAGE_2 = "JUST AMAZING";
 
     @Autowired
-    TestEntityManager em;
+    private TestEntityManager em;
 
     @Autowired
-    CommentRepository commentRepository;
+    private CommentRepository commentRepository;
 
     @DisplayName("correctly save comment")
     @Test

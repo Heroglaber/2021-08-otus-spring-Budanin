@@ -19,10 +19,10 @@ public class AuthorRepositoryJpaTest {
     private static final int AUTHORS_TABLE_SIZE = 10;
 
     @Autowired
-    TestEntityManager em;
+    private TestEntityManager em;
 
     @Autowired
-    AuthorRepository authorRepository;
+    private AuthorRepository authorRepository;
 
     @DisplayName("correctly save author")
     @Test
