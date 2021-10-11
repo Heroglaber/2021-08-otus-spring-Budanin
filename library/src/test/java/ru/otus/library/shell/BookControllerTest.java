@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.shell.Shell;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import ru.otus.library.shell.utils.InputWithCommandArguments;
@@ -15,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Shell commands tests")
 @SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class BookControllerTest {
     @Autowired
     private Shell shell;
