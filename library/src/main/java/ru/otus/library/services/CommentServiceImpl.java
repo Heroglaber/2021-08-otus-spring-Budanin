@@ -27,7 +27,7 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     @Transactional(readOnly = true)
-    public List<CommentDTO> getAllByBookId(long bookId) {
+    public List<CommentDTO> getAllByBookId(String bookId) {
         List<Comment> comments = commentRepository.findAllByBook_Id(bookId);
         if(comments.isEmpty()) {
             throw new RuntimeException("Comments not found for this book.");
@@ -37,7 +37,7 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     @Transactional(readOnly = true)
-    public CommentDTO get(long id) {
+    public CommentDTO get(String id) {
         Comment comment = commentRepository.findById(id)
                         .orElseThrow();
         return commentMapper.toCommentDTO(comment);
@@ -73,7 +73,7 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     @Transactional
-    public CommentDTO delete(long id) {
+    public CommentDTO delete(String id) {
         CommentDTO commentDTO = get(id);
         commentRepository.deleteById(id);
         return commentDTO;
@@ -81,7 +81,7 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     @Transactional
-    public void deleteAllByBookId(Long bookId) {
+    public void deleteAllByBookId(String bookId) {
         commentRepository.deleteAllByBook_Id(bookId);
     }
 }

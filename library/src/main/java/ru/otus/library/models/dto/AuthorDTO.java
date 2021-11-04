@@ -9,7 +9,7 @@ import lombok.*;
 @RequiredArgsConstructor
 @EqualsAndHashCode(of = {"name"})
 public class AuthorDTO {
-    private long id;
+    private String id;
     @NonNull
     private String name;
 }

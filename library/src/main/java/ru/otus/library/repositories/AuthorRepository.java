@@ -5,7 +5,7 @@ import ru.otus.library.models.domain.Author;
 
 import java.util.Optional;
 
-public interface AuthorRepository extends MongoRepository<Author, Long> {
-    Optional<Author> findById(long id);
+public interface AuthorRepository extends MongoRepository<Author, String> {
+    Optional<Author> findById(String id);
     Optional<Author> findByName(String name);
 }

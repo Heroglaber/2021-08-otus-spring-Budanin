@@ -11,7 +11,7 @@ import java.util.UUID;
 @ToString
 @EqualsAndHashCode(of = {"title", "authors"})
 public class BookDTO {
-    private long id;
+    private String id;
     @NonNull
     private String title;
     private List<AuthorDTO> authors;

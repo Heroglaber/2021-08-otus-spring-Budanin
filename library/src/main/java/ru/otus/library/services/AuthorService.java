@@ -10,5 +10,5 @@ public interface AuthorService {
     AuthorDTO add(String name);
     AuthorDTO getOrAdd(String name);
     AuthorDTO update(AuthorDTO authorDTO);
-    AuthorDTO delete(long id);
+    AuthorDTO delete(String id);
 }

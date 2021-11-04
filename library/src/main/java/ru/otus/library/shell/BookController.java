@@ -16,7 +16,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @ShellComponent
 @RequiredArgsConstructor
@@ -62,7 +61,7 @@ public class BookController {
 
     @ShellMethod(value = "Update book. usage: u --id 8 --title 'Updated title' --genre 'Updated genre' --author 'Updated author' --comment 'Updated comment'",
             key = {"book update", "b u", "update", "u"})
-    String updateBook(@ShellOption long id,
+    String updateBook(@ShellOption String id,
                       @ShellOption(defaultValue = "") String title,
                       @ShellOption(defaultValue = "") String genre,
                       @ShellOption(defaultValue = "") String author,
@@ -89,7 +88,7 @@ public class BookController {
     }
 
     @ShellMethod(value = "Add book author. usage: author add --id 8 --name 'Third Author'", key = {"author add", "a a"})
-    String addAuthor(@ShellOption("--id") @NotNull long bookId,
+    String addAuthor(@ShellOption("--id") @NotNull String bookId,
                      @ShellOption("--name") @NotBlank String name) {
         BookDTO bookDTO = bookService.getById(bookId);
         AuthorDTO authorDTO = new AuthorDTO(name);
@@ -98,7 +97,7 @@ public class BookController {
     }
 
     @ShellMethod(value = "Delete book author. usage: author delete --id 8 --name 'Stephen King'", key = {"author delete", "a d", "a r"})
-    String deleteAuthor(@ShellOption("--id") long bookId,
+    String deleteAuthor(@ShellOption("--id") String bookId,
                      @ShellOption("--name") String name) {
         BookDTO bookDTO = bookService.getById(bookId);
         AuthorDTO authorDTO = new AuthorDTO(name);
@@ -107,7 +106,7 @@ public class BookController {
     }
 
     @ShellMethod(value = "Add book genre. usage: genre add --id 8 --name 'New genre'", key = {"genre add", "g a"})
-    String addGenre(@ShellOption("--id") long bookId,
+    String addGenre(@ShellOption("--id") String bookId,
                      @ShellOption("--name") String name) {
         BookDTO bookDTO = bookService.getById(bookId);
         GenreDTO genreDTO = new GenreDTO(name);
@@ -115,8 +114,8 @@ public class BookController {
         return "Genre was added successfully";
     }
 
-    @ShellMethod(value = "Remove book genre. usage: ", key = {"genre delete", "g d", "g r"})
-    String deleteGenre(@ShellOption("--id") long bookId,
+    @ShellMethod(value = "Remove book genre. usage: genre delete --id 8 --name 'New genre'", key = {"genre delete", "g d", "g r"})
+    String deleteGenre(@ShellOption("--id") String bookId,
                     @ShellOption("--name") String name) {
         BookDTO bookDTO = bookService.getById(bookId);
         GenreDTO genreDTO = new GenreDTO(name);
@@ -125,7 +124,7 @@ public class BookController {
     }
 
     @ShellMethod(value = "Add book comment. usage: comment add --id 8 --message 'Great book!'", key = {"comment add", "c a"})
-    String addComment(@ShellOption("--id") long bookId,
+    String addComment(@ShellOption("--id") String bookId,
                     @ShellOption("--message") String message) {
         BookDTO bookDTO = bookService.getById(bookId);
         CommentDTO commentDTO = new CommentDTO();
@@ -136,7 +135,7 @@ public class BookController {
     }
 
     @ShellMethod(value = "Remove book comment. usage: comment delete --id 3 --message 'Great book!'", key = {"comment delete", "c d", "c r"})
-    String deleteComment(@ShellOption("--id") long bookId,
+    String deleteComment(@ShellOption("--id") String bookId,
                       @ShellOption("--message") String message) {
         List<CommentDTO> comments = commentService.getAllByBookId(bookId);
         Optional<CommentDTO> candidate = comments.stream().
@@ -152,13 +151,13 @@ public class BookController {
     }
 
     @ShellMethod(value = "Show all book comments. usage: comment show --id 3", key = {"comment show", "c s", "comment list", "c l"})
-    String deleteComment(@ShellOption("--id") long bookId) {
+    String deleteComment(@ShellOption("--id") String bookId) {
         List<CommentDTO> comments = commentService.getAllByBookId(bookId);
         return comments.toString();
     }
 
     @ShellMethod(value = "Delete book by id. usage: d 11", key = {"d","delete"})
-    String deleteBook(@ShellOption("--id") long id) {
+    String deleteBook(@ShellOption("--id") String id) {
         bookService.deleteById(id);
         return "Book successfully removed from library";
     }

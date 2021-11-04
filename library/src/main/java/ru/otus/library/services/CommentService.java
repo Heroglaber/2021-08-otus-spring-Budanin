@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface CommentService {
     List<CommentDTO> getAll();
-    List<CommentDTO> getAllByBookId(long bookId);
-    CommentDTO get(long id);
+    List<CommentDTO> getAllByBookId(String bookId);
+    CommentDTO get(String id);
     CommentDTO add(CommentDTO commentDTO);
     List<CommentDTO> addAll(List<CommentDTO> comments);
     CommentDTO update(CommentDTO commentDTO);
-    CommentDTO delete(long id);
-    void deleteAllByBookId(Long bookId);
+    CommentDTO delete(String id);
+    void deleteAllByBookId(String bookId);
 }

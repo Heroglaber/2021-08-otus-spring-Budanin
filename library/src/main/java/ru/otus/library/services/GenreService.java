@@ -10,5 +10,5 @@ public interface GenreService {
     GenreDTO add(String name);
     GenreDTO getOrAdd(String name);
     GenreDTO update(GenreDTO genreDTO);
-    GenreDTO delete(long id);
+    GenreDTO delete(String id);
 }

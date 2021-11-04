@@ -37,7 +37,7 @@ public class BookServiceImpl implements BookService{
 
     @Override
     @Transactional(readOnly = true)
-    public BookDTO getById(Long id) {
+    public BookDTO getById(String id) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Book not found in library."));
         return bookMapper.toBookDTO(book);
@@ -47,9 +47,6 @@ public class BookServiceImpl implements BookService{
     @Transactional(readOnly = true)
     public List<BookDTO> getByTitle(String title) {
         List<Book> books = bookRepository.findByTitle(title);
-        if(books.isEmpty()) {
-            throw new NoSuchElementException("Books not found in library.");
-        }
         return bookMapper.toBookDTOList(books);
     }
 
@@ -63,6 +60,9 @@ public class BookServiceImpl implements BookService{
         for(int i = 0; i < bookDTO.getGenres().size(); i++) {
             GenreDTO genreDTO = bookDTO.getGenres().get(i);
             bookDTO.getGenres().set(i, genreService.getOrAdd(genreDTO.getName()));
+        }
+        if(getByTitle(bookDTO.getTitle()).contains(bookDTO)) {
+            throw new RuntimeException("Library already contains such book");
         }
         Book book = bookRepository.save(bookMapper.toBook(bookDTO));
         return bookMapper.toBookDTO(book);
@@ -151,8 +151,11 @@ public class BookServiceImpl implements BookService{
 
     @Override
     @Transactional
-    public BookDTO deleteById(Long id) {
-        Book book = bookRepository.findById(id).orElseThrow();
+    public BookDTO deleteById(String id) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Book not found in library."));
+        //cascade deleting comments records
+        commentService.deleteAllByBookId(book.getId());
         bookRepository.deleteById(id);
         return bookMapper.toBookDTO(book);
     }

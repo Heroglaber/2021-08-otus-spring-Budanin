@@ -13,14 +13,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @EqualsAndHashCode(of = "id")
 @Document(collection = "genres")
 public class Genre {
-    @Transient
-    public static final String SEQUENCE_NAME = "genres_sequence";
 
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private long id;
+    private String id;
 
-    @NonNull
 //    @Column(name = "name", nullable = false, unique = true)
+    @NonNull
     private String name;
 }

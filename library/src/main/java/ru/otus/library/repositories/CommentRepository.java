@@ -8,10 +8,10 @@ import ru.otus.library.models.domain.Comment;
 import java.util.List;
 import java.util.Optional;
 
-public interface CommentRepository extends MongoRepository<Comment, Long> {
-    Optional<Comment> findById(long id);
+public interface CommentRepository extends MongoRepository<Comment, String> {
+    Optional<Comment> findById(String id);
     Optional<Comment> findByMessage(String message);
-    @Query("{'book.$id':?0}")
-    List<Comment> findAllByBook_Id( Long id);
-    void deleteAllByBook_Id(Long id);
+    @Query("{'book.id':?0}")
+    List<Comment> findAllByBook_Id( String id);
+    void deleteAllByBook_Id(String id);
 }

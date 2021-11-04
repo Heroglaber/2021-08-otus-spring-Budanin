@@ -34,35 +34,35 @@ public class BookServiceIntegrationTest {
     @Autowired
     private BookServiceImpl bookService;
 
-    @Test
-    @DisplayName("correctly save book")
-    @Transactional
-    public void shouldAddBook() {
-        final String BOOK_TITLE = "The New Title";
-        final String FIRST_AUTHOR = "First Author";
-        final String SECOND_AUTHOR = "Second Author";
-        int authorsListSize = 2;
-        BookDTO newBook = new BookDTO(BOOK_TITLE);
-        AuthorDTO firstAuthor = new AuthorDTO(FIRST_AUTHOR);
-        AuthorDTO secondAuthor = new AuthorDTO(SECOND_AUTHOR);
-        newBook.setAuthors(Arrays.asList(firstAuthor, secondAuthor));
-
-        //assertThat(newBook.getId()).isZero();
-        assertThat(firstAuthor.getId()).isZero();
-        assertThat(secondAuthor.getId()).isZero();
-
-        BookDTO inserted = bookService.add(newBook);
-
-        //assertThat(inserted.getId()).isGreaterThan(0);
-        assertThat(inserted.getAuthors()).allMatch(authorDTO -> authorDTO.getId() > 0);
-        assertThat(inserted.getAuthors()).extracting(AuthorDTO::getId).allMatch(id -> em.find(Author.class, id) != null);
-        assertThat(inserted.getAuthors()).hasSize(authorsListSize);
-        Book actualRecord = em.find(Book.class, inserted.getId());
-        assertThat(actualRecord.getTitle()).isEqualTo(BOOK_TITLE);
-        assertThat(actualRecord.getAuthors()).allMatch(authorDTO -> authorDTO.getId() > 0);
-        assertThat(actualRecord.getAuthors()).hasSize(authorsListSize)
-                .extracting("name").containsExactlyInAnyOrder(FIRST_AUTHOR, SECOND_AUTHOR);
-    }
+//    @Test
+//    @DisplayName("correctly save book")
+//    @Transactional
+//    public void shouldAddBook() {
+//        final String BOOK_TITLE = "The New Title";
+//        final String FIRST_AUTHOR = "First Author";
+//        final String SECOND_AUTHOR = "Second Author";
+//        int authorsListSize = 2;
+//        BookDTO newBook = new BookDTO(BOOK_TITLE);
+//        AuthorDTO firstAuthor = new AuthorDTO(FIRST_AUTHOR);
+//        AuthorDTO secondAuthor = new AuthorDTO(SECOND_AUTHOR);
+//        newBook.setAuthors(Arrays.asList(firstAuthor, secondAuthor));
+//
+//        //assertThat(newBook.getId()).isZero();
+//        assertThat(firstAuthor.getId()).isZero();
+//        assertThat(secondAuthor.getId()).isZero();
+//
+//        BookDTO inserted = bookService.add(newBook);
+//
+//        //assertThat(inserted.getId()).isGreaterThan(0);
+//        assertThat(inserted.getAuthors()).allMatch(authorDTO -> authorDTO.getId() > 0);
+//        assertThat(inserted.getAuthors()).extracting(AuthorDTO::getId).allMatch(id -> em.find(Author.class, id) != null);
+//        assertThat(inserted.getAuthors()).hasSize(authorsListSize);
+//        Book actualRecord = em.find(Book.class, inserted.getId());
+//        assertThat(actualRecord.getTitle()).isEqualTo(BOOK_TITLE);
+//        assertThat(actualRecord.getAuthors()).allMatch(authorDTO -> authorDTO.getId() > 0);
+//        assertThat(actualRecord.getAuthors()).hasSize(authorsListSize)
+//                .extracting("name").containsExactlyInAnyOrder(FIRST_AUTHOR, SECOND_AUTHOR);
+//    }
 
 //    @Test
 //    @DisplayName("correctly save book with authors and genres")

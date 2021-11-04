@@ -19,7 +19,7 @@ public class DatabaseChangelog {
     @ChangeSet(order = "002", id = "insertTheRoadsidePicnic", author = "abudanin")
     public void insertBook(MongoDatabase db) {
         MongoCollection<Document> myCollection = db.getCollection("books");
-        var doc = new Document().append("name", "The Roadside Picnic");
+        var doc = new Document().append("title", "The Roadside Picnic");
         myCollection.insertOne(doc);
     }
 

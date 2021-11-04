@@ -66,7 +66,7 @@ public class GenreServiceImpl implements GenreService{
 
     @Override
     @Transactional
-    public GenreDTO delete(long id) {
+    public GenreDTO delete(String id) {
         Genre genre = genreRepository.findById(id).orElseThrow();
         genreRepository.deleteById(id);
         return genreMapper.toGenreDTO(genre);

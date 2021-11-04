@@ -9,7 +9,7 @@ import lombok.*;
 @RequiredArgsConstructor
 @EqualsAndHashCode(of = {"book", "message"})
 public class CommentDTO {
-    private long id;
+    private String id;
     @NonNull
     private BookDTO book;
     @NonNull

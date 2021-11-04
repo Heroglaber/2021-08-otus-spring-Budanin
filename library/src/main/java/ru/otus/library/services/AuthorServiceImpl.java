@@ -9,7 +9,6 @@ import ru.otus.library.repositories.AuthorRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class AuthorServiceImpl implements AuthorService{
@@ -68,7 +67,7 @@ public class AuthorServiceImpl implements AuthorService{
 
     @Override
     @Transactional
-    public AuthorDTO delete(long id) {
+    public AuthorDTO delete(String id) {
         Author author = authorRepository.findById(id).orElseThrow();
         authorRepository.deleteById(id);
         return authorMapper.toAuthorDTO(author);

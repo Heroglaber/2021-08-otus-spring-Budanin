@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface BookService {
     List<BookDTO> getAll();
-    BookDTO getById(Long id);
+    BookDTO getById(String id);
     List<BookDTO> getByTitle(String title);
     BookDTO add(BookDTO bookDTO);
     BookDTO addAuthor(BookDTO bookDTO, AuthorDTO author);
@@ -17,5 +17,5 @@ public interface BookService {
     BookDTO changeTitle(BookDTO bookDTO, String newTitle);
     BookDTO deleteAuthor(BookDTO bookDTO, AuthorDTO author);
     BookDTO deleteGenre(BookDTO bookDTO, GenreDTO genre);
-    BookDTO deleteById(Long id);
+    BookDTO deleteById(String id);
 }
