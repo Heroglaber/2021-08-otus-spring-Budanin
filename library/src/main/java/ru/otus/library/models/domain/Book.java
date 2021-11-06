@@ -22,15 +22,7 @@ public class Book {
     @NonNull
     private String title;
 
-    //@Fetch(FetchMode.SUBSELECT)
-    //@ManyToMany(targetEntity = Author.class, fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
-    //@JoinTable(name = "book_authors", joinColumns = @JoinColumn(name = "book_id"),
-    //inverseJoinColumns = @JoinColumn(name = "author_id"))
     private List<Author> authors;
 
-//    @Fetch(FetchMode.SUBSELECT)
-//    @ManyToMany(targetEntity = Genre.class, fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
-//    @JoinTable(name = "book_genres", joinColumns = @JoinColumn(name = "book_id"),
-//            inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private List<Genre> genres;
 }

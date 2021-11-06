@@ -2,6 +2,8 @@ package ru.otus.library.models.dto;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @ToString
@@ -14,4 +16,6 @@ public class CommentDTO {
     private BookDTO book;
     @NonNull
     private String message;
+
+    private LocalDateTime dateTime = LocalDateTime.now();
 }
