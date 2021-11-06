@@ -15,17 +15,17 @@ import java.util.UUID;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DisplayName("Book repository should ")
-@DataJpaTest
+//@DataJpaTest
 public class BookRepositoryJpaTest {
     private static final long EXISTING_BOOK_ID = 3L;
     private static final String EXISING_BOOK_TITLE = "One Hundred Years of Solitude";
     private static final int BOOKS_TABLE_SIZE = 10;
 
-    @Autowired
-    private TestEntityManager em;
-
-    @Autowired
-    private BookRepository bookRepository;
+//    @Autowired
+//    private TestEntityManager em;
+//
+//    @Autowired
+//    private BookRepository bookRepository;
 
 //    @DisplayName("correctly save book")
 //    @Test

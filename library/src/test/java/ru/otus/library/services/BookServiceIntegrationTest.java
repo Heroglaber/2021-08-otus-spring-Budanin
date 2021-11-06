@@ -24,15 +24,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@AutoConfigureTestEntityManager
+//@AutoConfigureTestEntityManager
 @DisplayName("BookService should ")
 public class BookServiceIntegrationTest {
 
-    @Autowired
-    private TestEntityManager em;
-
-    @Autowired
-    private BookServiceImpl bookService;
+//    @Autowired
+//    private TestEntityManager em;
+//
+//    @Autowired
+//    private BookServiceImpl bookService;
 
 //    @Test
 //    @DisplayName("correctly save book")

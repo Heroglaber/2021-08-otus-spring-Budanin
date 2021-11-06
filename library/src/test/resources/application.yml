@@ -2,3 +2,17 @@ spring:
   shell:
     interactive:
       enabled: false
+  data:
+    mongodb:
+      database: library
+      port: 27017
+      host: localhost
+
+mongock:
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.library.mongock.changelog
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local

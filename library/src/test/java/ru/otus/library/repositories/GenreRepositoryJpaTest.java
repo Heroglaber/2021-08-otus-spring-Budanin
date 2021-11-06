@@ -12,17 +12,17 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DisplayName("Genre repository should ")
-@DataJpaTest
+//@DataJpaTest
 public class GenreRepositoryJpaTest {
     private static final long EXISING_GENRE_ID = 3L;
     private static final String EXISING_GENRE_NAME = "horror";
     private static final int GENRES_TABLE_SIZE = 6;
 
-    @Autowired
-    private TestEntityManager em;
-
-    @Autowired
-    private GenreRepository genreRepository;
+//    @Autowired
+//    private TestEntityManager em;
+//
+//    @Autowired
+//    private GenreRepository genreRepository;
 
 //    @DisplayName("correctly save genre")
 //    @Test

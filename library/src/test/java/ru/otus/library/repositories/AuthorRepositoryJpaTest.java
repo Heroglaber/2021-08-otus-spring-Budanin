@@ -12,17 +12,17 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DisplayName("Author repository should ")
-@DataJpaTest
+//@DataJpaTest
 public class AuthorRepositoryJpaTest {
     private static final long EXISING_AUTHOR_ID = 3L;
     private static final String EXISTING_AUTHOR_NAME = "Gabriel Garcia Marquez";
     private static final int AUTHORS_TABLE_SIZE = 10;
 
-    @Autowired
-    private TestEntityManager em;
-
-    @Autowired
-    private AuthorRepository authorRepository;
+//    @Autowired
+//    private TestEntityManager em;
+//
+//    @Autowired
+//    private AuthorRepository authorRepository;
 
 //    @DisplayName("correctly save author")
 //    @Test

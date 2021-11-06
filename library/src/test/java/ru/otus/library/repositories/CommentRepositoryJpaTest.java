@@ -13,7 +13,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Comment repository should ")
-@DataJpaTest
+//@DataJpaTest
 public class CommentRepositoryJpaTest {
     private static final long EXISTING_COMMENT_ID = 3L;
     private static final String EXISING_COMMENT_MESSAGE = "Scary book!";
@@ -21,11 +21,11 @@ public class CommentRepositoryJpaTest {
     private static final long EXISTING_BOOK_ID = 8L;
     private static final String EXISING_COMMENT_MESSAGE_2 = "JUST AMAZING";
 
-    @Autowired
-    private TestEntityManager em;
-
-    @Autowired
-    private CommentRepository commentRepository;
+//    @Autowired
+//    private TestEntityManager em;
+//
+//    @Autowired
+//    private CommentRepository commentRepository;
 
 //    @DisplayName("correctly save comment")
 //    @Test
