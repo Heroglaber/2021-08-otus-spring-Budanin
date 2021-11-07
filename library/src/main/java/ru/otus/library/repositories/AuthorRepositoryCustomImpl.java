@@ -35,5 +35,20 @@ public class AuthorRepositoryCustomImpl implements AuthorRepositoryCustom{
         mongoTemplate.updateMulti(new Query(), update, Book.class);
     }
 
+    @Override
+    public void deleteBookRefFromAuthor(Author author, Book book) {
+        val query = Query.query(Criteria.where("_id").is(new ObjectId(book.getId())));
+        val update = new Update().pull("books", query);
+        mongoTemplate.updateFirst(new Query(Criteria.where("_id").is(new ObjectId(author.getId())))
+                , update, Author.class);
+    }
 
+    @Override
+    public void addBookRefToAuthor(Author author, Book book) {
+        Book bookRef = new Book(book.getId(), book.getTitle());
+        val query = Query.query(Criteria.where("_id").is(new ObjectId(book.getId())));
+        val update = new Update().addToSet("books", bookRef);
+        mongoTemplate.updateFirst(new Query(Criteria.where("_id").is(new ObjectId(author.getId())))
+                , update, Author.class);
+    }
 }

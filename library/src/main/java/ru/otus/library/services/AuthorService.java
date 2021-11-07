@@ -12,5 +12,7 @@ public interface AuthorService {
     AuthorDTO add(AuthorDTO authorDTO);
     AuthorDTO getOrAdd(AuthorDTO authorDTO);
     AuthorDTO update(AuthorDTO authorDTO);
+    void addBook(AuthorDTO authorDTO, BookDTO bookDTO);
+    void deleteBook(AuthorDTO authorDTO, BookDTO bookDTO);
     AuthorDTO delete(String id);
 }

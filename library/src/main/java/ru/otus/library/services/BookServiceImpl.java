@@ -54,12 +54,14 @@ public class BookServiceImpl implements BookService{
     @Transactional
     public BookDTO add(BookDTO bookDTO) {
         for(int i = 0; i < bookDTO.getAuthors().size(); i++) {
-            AuthorDTO authorDTO = bookDTO.getAuthors().get(i);
-            bookDTO.getAuthors().set(i, authorService.getOrAdd(authorDTO));
+            AuthorDTO authorDTO = authorService.getOrAdd(bookDTO.getAuthors().get(i));
+            //remove book references
+            authorDTO.setBooks(null);
+            bookDTO.getAuthors().set(i, authorDTO);
         }
         for(int i = 0; i < bookDTO.getGenres().size(); i++) {
-            GenreDTO genreDTO = bookDTO.getGenres().get(i);
-            bookDTO.getGenres().set(i, genreService.getOrAdd(genreDTO));
+            GenreDTO genreDTO = genreService.getOrAdd(bookDTO.getGenres().get(i));
+            bookDTO.getGenres().set(i, genreDTO);
         }
         if(getByTitle(bookDTO.getTitle()).contains(bookDTO)) {
             throw new RuntimeException("Library already contains such book");
@@ -81,7 +83,9 @@ public class BookServiceImpl implements BookService{
             throw new RuntimeException("The book already has such an author.");
         }
         Book book = bookRepository.save(bookMapper.toBook(bookDTO));
-        return bookMapper.toBookDTO(book);
+        bookDTO = bookMapper.toBookDTO(book);
+        authorService.addBook(authorDTO, bookDTO);
+        return bookDTO;
     }
 
     @Override
@@ -128,6 +132,7 @@ public class BookServiceImpl implements BookService{
     @Override
     @Transactional
     public BookDTO deleteAuthor(BookDTO bookDTO, AuthorDTO authorDTO) {
+        authorDTO = authorService.getOrAdd(authorDTO);
         if(bookDTO.getAuthors().contains(authorDTO)) {
             bookDTO.getAuthors().remove(authorDTO);
         }
@@ -135,7 +140,9 @@ public class BookServiceImpl implements BookService{
             throw new RuntimeException("The book does not have such an author.");
         }
         Book book = bookRepository.save(bookMapper.toBook(bookDTO));
-        return bookMapper.toBookDTO(book);
+        bookDTO = bookMapper.toBookDTO(book);
+        authorService.deleteBook(authorDTO, bookDTO);
+        return bookDTO;
     }
 
     @Override

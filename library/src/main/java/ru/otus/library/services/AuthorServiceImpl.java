@@ -3,6 +3,7 @@ package ru.otus.library.services;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.library.models.converters.AuthorMapper;
+import ru.otus.library.models.converters.BookMapper;
 import ru.otus.library.models.domain.Author;
 import ru.otus.library.models.dto.AuthorDTO;
 import ru.otus.library.models.dto.BookDTO;
@@ -15,10 +16,12 @@ import java.util.NoSuchElementException;
 public class AuthorServiceImpl implements AuthorService{
     private final AuthorRepository authorRepository;
     private final AuthorMapper authorMapper;
+    private final BookMapper bookMapper;
 
-    public AuthorServiceImpl(AuthorRepository authorRepository, AuthorMapper authorMapper) {
+    public AuthorServiceImpl(AuthorRepository authorRepository, AuthorMapper authorMapper, BookMapper bookMapper) {
         this.authorRepository = authorRepository;
         this.authorMapper = authorMapper;
+        this.bookMapper = bookMapper;
     }
 
 
@@ -65,6 +68,24 @@ public class AuthorServiceImpl implements AuthorService{
         target.setBooks(source.getBooks());
         target = authorRepository.save(target);
         return authorMapper.toAuthorDTO(target);
+    }
+
+    @Override
+    public void addBook(AuthorDTO authorDTO, BookDTO bookDTO) {
+        if(authorDTO.getId() == null || bookDTO.getId() == null) {
+            throw new RuntimeException("Author id or book id doesnot specified!");
+        }
+        authorRepository.addBookRefToAuthor(authorMapper.toAuthor(authorDTO)
+                , bookMapper.toBook(bookDTO));
+    }
+
+    @Override
+    public void deleteBook(AuthorDTO authorDTO, BookDTO bookDTO) {
+        if(authorDTO.getId() == null || bookDTO.getId() == null) {
+            throw new RuntimeException("Author id or book id doesnot specified!");
+        }
+        authorRepository.deleteBookRefFromAuthor(authorMapper.toAuthor(authorDTO)
+                , bookMapper.toBook(bookDTO));
     }
 
     @Override
