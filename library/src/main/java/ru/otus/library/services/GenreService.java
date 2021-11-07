@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface GenreService {
     List<GenreDTO> getAll();
-    GenreDTO get(String name);
-    GenreDTO add(String name);
-    GenreDTO getOrAdd(String name);
+    GenreDTO get(GenreDTO genreDTO);
+    GenreDTO add(GenreDTO genreDTO);
+    GenreDTO getOrAdd(GenreDTO genreDTO);
     GenreDTO update(GenreDTO genreDTO);
     GenreDTO delete(String id);
 }

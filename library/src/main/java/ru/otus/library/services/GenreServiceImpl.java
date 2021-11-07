@@ -29,30 +29,30 @@ public class GenreServiceImpl implements GenreService{
 
     @Override
     @Transactional(readOnly = true)
-    public GenreDTO get(String name) {
-        Genre genre = genreRepository.findByName(name).orElseThrow();
+    public GenreDTO get(GenreDTO genreDTO) {
+        Genre genre = genreRepository.findByName(genreDTO.getName()).orElseThrow();
         return genreMapper.toGenreDTO(genre);
     }
 
     @Override
     @Transactional
-    public GenreDTO add(String name) {
-        Genre genre = new Genre(name);
+    public GenreDTO add(GenreDTO genreDTO) {
+        Genre genre = genreMapper.toGenre(genreDTO);
         genreRepository.save(genre);
         return genreMapper.toGenreDTO(genre);
     }
 
     @Override
     @Transactional
-    public GenreDTO getOrAdd(String name) {
-        GenreDTO genreDTO;
+    public GenreDTO getOrAdd(GenreDTO genreDTO) {
+        GenreDTO result;
         try {
-            genreDTO = get(name);
+            result = get(genreDTO);
         }
         catch(NoSuchElementException e) {
-            genreDTO = add(name);
+            result = add(genreDTO);
         }
-        return genreDTO;
+        return result;
     }
 
     @Override

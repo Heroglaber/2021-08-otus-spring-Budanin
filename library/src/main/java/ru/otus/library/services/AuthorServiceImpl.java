@@ -29,30 +29,30 @@ public class AuthorServiceImpl implements AuthorService{
 
     @Override
     @Transactional(readOnly = true)
-    public AuthorDTO get(String name) {
-        Author author = authorRepository.findByName(name).orElseThrow();
+    public AuthorDTO get(AuthorDTO authorDTO) {
+        Author author = authorRepository.findByName(authorDTO.getName()).orElseThrow();
         return authorMapper.toAuthorDTO(author);
     }
 
     @Override
     @Transactional
-    public AuthorDTO add(String name) {
-        Author author = new Author(name);
+    public AuthorDTO add(AuthorDTO authorDTO) {
+        Author author = authorMapper.toAuthor(authorDTO);
         author = authorRepository.save(author);
         return authorMapper.toAuthorDTO(author);
     }
 
     @Override
     @Transactional
-    public AuthorDTO getOrAdd(String name) {
-        AuthorDTO authorDTO;
+    public AuthorDTO getOrAdd(AuthorDTO authorDTO) {
+        AuthorDTO result;
         try {
-            authorDTO = get(name);
+            result = get(authorDTO);
         }
         catch(NoSuchElementException e) {
-            authorDTO = add(name);
+            result = add(authorDTO);
         }
-        return authorDTO;
+        return result;
     }
 
     @Override
@@ -61,6 +61,7 @@ public class AuthorServiceImpl implements AuthorService{
         Author source = authorMapper.toAuthor(authorDTO);
         Author target = authorRepository.findById(source.getId()).orElseThrow();
         target.setName(source.getName());
+        target.setBooks(source.getBooks());
         target = authorRepository.save(target);
         return authorMapper.toAuthorDTO(target);
     }

@@ -22,7 +22,6 @@ import ru.otus.library.services.CommentServiceImpl;
 import ru.otus.library.services.GenreServiceImpl;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

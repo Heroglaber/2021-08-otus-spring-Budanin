@@ -55,23 +55,24 @@ public class BookServiceImpl implements BookService{
     public BookDTO add(BookDTO bookDTO) {
         for(int i = 0; i < bookDTO.getAuthors().size(); i++) {
             AuthorDTO authorDTO = bookDTO.getAuthors().get(i);
-            bookDTO.getAuthors().set(i, authorService.getOrAdd(authorDTO.getName()));
+            bookDTO.getAuthors().set(i, authorService.getOrAdd(authorDTO));
         }
         for(int i = 0; i < bookDTO.getGenres().size(); i++) {
             GenreDTO genreDTO = bookDTO.getGenres().get(i);
-            bookDTO.getGenres().set(i, genreService.getOrAdd(genreDTO.getName()));
+            bookDTO.getGenres().set(i, genreService.getOrAdd(genreDTO));
         }
         if(getByTitle(bookDTO.getTitle()).contains(bookDTO)) {
             throw new RuntimeException("Library already contains such book");
         }
         Book book = bookRepository.save(bookMapper.toBook(bookDTO));
+        bookRepository.addBookRefToAuthors(book.getId());
         return bookMapper.toBookDTO(book);
     }
 
     @Override
     @Transactional
     public BookDTO addAuthor(BookDTO bookDTO, AuthorDTO authorDTO) {
-        authorDTO = authorService.getOrAdd(authorDTO.getName());
+        authorDTO = authorService.getOrAdd(authorDTO);
         if(!bookDTO.getAuthors().contains(authorDTO)) {
             bookDTO.getAuthors().add(authorDTO);
         }
@@ -85,7 +86,7 @@ public class BookServiceImpl implements BookService{
     @Override
     @Transactional
     public BookDTO addGenre(BookDTO bookDTO, GenreDTO genreDTO) {
-        genreDTO = genreService.getOrAdd(genreDTO.getName());
+        genreDTO = genreService.getOrAdd(genreDTO);
         if(!bookDTO.getGenres().contains(genreDTO)) {
             bookDTO.getGenres().add(genreDTO);
         }
@@ -104,11 +105,11 @@ public class BookServiceImpl implements BookService{
         }
         for(int i = 0; i < bookDTO.getAuthors().size(); i++) {
             AuthorDTO authorDTO = bookDTO.getAuthors().get(i);
-            bookDTO.getAuthors().set(i, authorService.getOrAdd(authorDTO.getName()));
+            bookDTO.getAuthors().set(i, authorService.getOrAdd(authorDTO));
         }
         for(int i = 0; i < bookDTO.getGenres().size(); i++) {
             GenreDTO genreDTO = bookDTO.getGenres().get(i);
-            bookDTO.getGenres().set(i, genreService.getOrAdd(genreDTO.getName()));
+            bookDTO.getGenres().set(i, genreService.getOrAdd(genreDTO));
         }
         bookRepository.save(bookMapper.toBook(bookDTO));
         return bookDTO;
