@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.library.models.converters.AuthorMapper;
 import ru.otus.library.models.domain.Author;
 import ru.otus.library.models.dto.AuthorDTO;
+import ru.otus.library.models.dto.BookDTO;
 import ru.otus.library.repositories.AuthorRepository;
 
 import java.util.List;
@@ -71,6 +72,8 @@ public class AuthorServiceImpl implements AuthorService{
     public AuthorDTO delete(String id) {
         Author author = authorRepository.findById(id).orElseThrow();
         authorRepository.deleteById(id);
+        //deleting author refs from books
+        authorRepository.deleteAuthorRefFromBooks(author);
         return authorMapper.toAuthorDTO(author);
     }
 }

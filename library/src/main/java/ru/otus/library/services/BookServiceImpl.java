@@ -65,7 +65,8 @@ public class BookServiceImpl implements BookService{
             throw new RuntimeException("Library already contains such book");
         }
         Book book = bookRepository.save(bookMapper.toBook(bookDTO));
-        bookRepository.addBookRefToAuthors(book.getId());
+        // Add bookRef to book`s authors
+        bookRepository.addBookRefToAuthors(book);
         return bookMapper.toBookDTO(book);
     }
 
@@ -157,6 +158,8 @@ public class BookServiceImpl implements BookService{
                 .orElseThrow(() -> new NoSuchElementException("Book not found in library."));
         //cascade deleting comments records
         commentService.deleteAllByBookId(book.getId());
+        //delete book ref from authors collection
+        bookRepository.deleteBookRefFromAuthors(book);
         bookRepository.deleteById(id);
         return bookMapper.toBookDTO(book);
     }

@@ -1,5 +1,7 @@
 package ru.otus.library.repositories;
 
+import lombok.val;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -8,7 +10,6 @@ import ru.otus.library.models.domain.Author;
 import ru.otus.library.models.domain.Book;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class BookRepositoryCustomImpl implements BookRepositoryCustom{
@@ -19,12 +20,8 @@ public class BookRepositoryCustomImpl implements BookRepositoryCustom{
     }
 
     @Override
-    public void addBookRefToAuthors(String bookId) {
-        Book book = mongoTemplate.findById(bookId, Book.class);
-        Map<String, String> bookRef = Map.of(
-                "id", book.getId(),
-                "title", book.getTitle()
-        );
+    public void addBookRefToAuthors(Book book) {
+        Book bookRef = new Book(book.getId(), book.getTitle());
         List<String> authorsId = book.getAuthors().stream()
                 .map(Author::getId).collect(Collectors.toList());
         Query query = new Query();
@@ -33,4 +30,13 @@ public class BookRepositoryCustomImpl implements BookRepositoryCustom{
         update.addToSet("books", bookRef);
         mongoTemplate.updateMulti(query, update, Author.class);
     }
+
+    @Override
+    public void deleteBookRefFromAuthors(Book book) {
+        val query = Query.query(Criteria.where("_id").is(new ObjectId(book.getId())));
+        val update = new Update().pull("books", query);
+        mongoTemplate.updateMulti(new Query(), update, Author.class);
+    }
+
+
 }
