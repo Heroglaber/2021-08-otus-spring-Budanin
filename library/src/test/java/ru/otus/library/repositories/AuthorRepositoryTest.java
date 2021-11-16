@@ -27,7 +27,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @Import({ BookServiceImpl.class, BookMapperImpl.class, AuthorMapperImpl.class, CommentMapperImpl.class, GenreMapperImpl.class, AuthorServiceImpl.class, GenreServiceImpl.class, CommentServiceImpl.class})
 public class AuthorRepositoryTest {
     private static final String EXISTING_AUTHOR_NAME = "Gabriel Garcia Marquez";
-    private static final int AUTHORS_TABLE_SIZE = 10;
+    private static final int AUTHORS_TABLE_SIZE = 11;
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -35,17 +35,11 @@ public class AuthorRepositoryTest {
     @Autowired
     private AuthorRepository authorRepository;
 
-    @DisplayName("correctly save author")
+    @DisplayName("find all authors")
     @Test
-    void shouldSaveAuthor() {
-        String name = "Test Author";
-        Author expectedAuthor = new Author(name);
-        authorRepository.save(expectedAuthor);
-
-        assertThat(expectedAuthor.getId()).isNotBlank();
-
-        Author actualAuthor = mongoTemplate.findById(expectedAuthor.getId(), Author.class);
-        assertThat(expectedAuthor).usingRecursiveComparison().ignoringAllOverriddenEquals().isEqualTo(actualAuthor);
+    void findAll() {
+        List<Author> authors = authorRepository.findAll();
+        assertThat(authors.size()).isEqualTo(AUTHORS_TABLE_SIZE);
     }
 
     @DisplayName("find author by id")
@@ -70,11 +64,18 @@ public class AuthorRepositoryTest {
         assertThat(expectedAuthor).usingRecursiveComparison().ignoringAllOverriddenEquals().isEqualTo(actualAuthor);
     }
 
-    @DisplayName("find all authors")
+    @DisplayName("correctly save author")
     @Test
-    void findAll() {
-        List<Author> authors = authorRepository.findAll();
-        assertThat(authors.size()).isEqualTo(AUTHORS_TABLE_SIZE);
+    void shouldSaveAuthor() {
+        String name = "Test Author";
+        Author expectedAuthor = new Author(name);
+        authorRepository.save(expectedAuthor);
+
+        assertThat(expectedAuthor.getId()).isNotBlank();
+
+        Author actualAuthor = mongoTemplate.findById(expectedAuthor.getId(), Author.class);
+        assertThat(expectedAuthor).usingRecursiveComparison().ignoringAllOverriddenEquals()
+                .isEqualTo(actualAuthor);
     }
 
     @DisplayName("delete author by id")
