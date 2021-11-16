@@ -3,24 +3,13 @@ package ru.otus.library;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
-import ru.otus.library.models.converters.AuthorMapperImpl;
-import ru.otus.library.models.converters.BookMapperImpl;
-import ru.otus.library.models.converters.CommentMapperImpl;
-import ru.otus.library.models.converters.GenreMapperImpl;
 import ru.otus.library.models.domain.Author;
 import ru.otus.library.models.domain.Book;
 import ru.otus.library.models.domain.Comment;
 import ru.otus.library.models.domain.Genre;
-import ru.otus.library.services.AuthorServiceImpl;
-import ru.otus.library.services.BookServiceImpl;
-import ru.otus.library.services.CommentServiceImpl;
-import ru.otus.library.services.GenreServiceImpl;
 
 import java.util.List;
 
@@ -28,8 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("After initialization database must ")
 @SpringBootTest
-//@DataMongoTest(excludeAutoConfiguration = EmbeddedMongoAutoConfiguration.class)
-//@Import({ BookServiceImpl.class, BookMapperImpl.class, AuthorMapperImpl.class, CommentMapperImpl.class, GenreMapperImpl.class, AuthorServiceImpl.class, GenreServiceImpl.class, CommentServiceImpl.class})
 public class DataInitializationTest {
     private static final int EXPECTED_AUTHORS_COUNT = 10;
     private static final int EXPECTED_GENRES_COUNT = 6;
