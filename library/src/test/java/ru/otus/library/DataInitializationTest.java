@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
@@ -26,8 +27,9 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("After initialization database must ")
-@DataMongoTest(excludeAutoConfiguration = EmbeddedMongoAutoConfiguration.class)
-@Import({ BookServiceImpl.class, BookMapperImpl.class, AuthorMapperImpl.class, CommentMapperImpl.class, GenreMapperImpl.class, AuthorServiceImpl.class, GenreServiceImpl.class, CommentServiceImpl.class})
+@SpringBootTest
+//@DataMongoTest(excludeAutoConfiguration = EmbeddedMongoAutoConfiguration.class)
+//@Import({ BookServiceImpl.class, BookMapperImpl.class, AuthorMapperImpl.class, CommentMapperImpl.class, GenreMapperImpl.class, AuthorServiceImpl.class, GenreServiceImpl.class, CommentServiceImpl.class})
 public class DataInitializationTest {
     private static final int EXPECTED_AUTHORS_COUNT = 10;
     private static final int EXPECTED_GENRES_COUNT = 6;

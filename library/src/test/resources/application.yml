@@ -5,8 +5,7 @@ spring:
   data:
     mongodb:
       database: library
-      port: 27017
-      host: localhost
+      port: 0
 
 mongock:
   runner-type: "InitializingBean"
