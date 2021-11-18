@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CommentRepository extends MongoRepository<Comment, String> {
-    Optional<Comment> findById(String id);
     Optional<Comment> findByMessage(String message);
     @Query("{'book.id':?0}")
     List<Comment> findAllByBook_Id( String id);

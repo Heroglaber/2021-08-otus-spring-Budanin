@@ -75,7 +75,7 @@ public class AuthorServiceImpl implements AuthorService{
         if(authorDTO.getId() == null || bookDTO.getId() == null) {
             throw new RuntimeException("Author id or book id doesnot specified!");
         }
-        authorRepository.addBookRefToAuthor(authorMapper.toAuthor(authorDTO)
+        authorRepository.addBookToAuthor(authorMapper.toAuthor(authorDTO)
                 , bookMapper.toBook(bookDTO));
     }
 
@@ -84,7 +84,7 @@ public class AuthorServiceImpl implements AuthorService{
         if(authorDTO.getId() == null || bookDTO.getId() == null) {
             throw new RuntimeException("Author id or book id doesnot specified!");
         }
-        authorRepository.deleteBookRefFromAuthor(authorMapper.toAuthor(authorDTO)
+        authorRepository.deleteBookFromAuthor(authorMapper.toAuthor(authorDTO)
                 , bookMapper.toBook(bookDTO));
     }
 
@@ -94,7 +94,7 @@ public class AuthorServiceImpl implements AuthorService{
         Author author = authorRepository.findById(id).orElseThrow();
         authorRepository.deleteById(id);
         //deleting author refs from books
-        authorRepository.deleteAuthorRefFromBooks(author);
+        authorRepository.deleteAuthorFromBooks(author);
         return authorMapper.toAuthorDTO(author);
     }
 }
