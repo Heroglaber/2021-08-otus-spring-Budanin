@@ -108,9 +108,17 @@ public class BookServiceImpl implements BookService{
         if(bookRepository.findById(bookDTO.getId()).isEmpty()) {
             throw new RuntimeException("Book with such id is not presented in repository.");
         }
+        //deleting book from authors
+        bookRepository.deleteBookRefFromAuthors(bookMapper.toBook(bookDTO));
+
         for(int i = 0; i < bookDTO.getAuthors().size(); i++) {
+            //AuthorDTO may be detach from a database
             AuthorDTO authorDTO = bookDTO.getAuthors().get(i);
-            bookDTO.getAuthors().set(i, authorService.getOrAdd(authorDTO));
+            //We have to get or add the author to the database
+            authorDTO = authorService.getOrAdd(authorDTO);
+            bookDTO.getAuthors().set(i, authorDTO);
+            //add book to author document
+            authorService.addBook(authorDTO, bookDTO);
         }
         for(int i = 0; i < bookDTO.getGenres().size(); i++) {
             GenreDTO genreDTO = bookDTO.getGenres().get(i);
