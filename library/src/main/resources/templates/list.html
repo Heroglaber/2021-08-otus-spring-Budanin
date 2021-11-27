@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Library</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div id="wrapper">
+    <div id="header">
+        <h2>List of all books</h2>
+    </div>
+</div>
+
+<div id="container">
+
+    <div id="content">
+
+        <input type="button" value="Add book"
+               onclick="window.location.href='addBook'; return false;"
+               class="add-button"
+        />
+
+        <table>
+            <thead>
+            <tr>
+                <th> id </th>
+                <th> title </th>
+                <th> authors </th>
+                <th> genres </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${books.isEmpty()}">
+                <td colspan="2"> No Books Available </td>
+            </tr>
+            <tr th:each="book : ${books}">
+                <div th:object="${book}" th:with="updateLink = '/customer/showFormForUpdate',
+                    deleteLink = '/customer/delete',
+                    bookId = *{id}">
+                    <td><span th:text="*{id}"> id </span></td>
+                    <td><span th:text="*{title}"> title </span></td>
+                    <td>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th> id </th>
+                                    <th> name </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="author : *{authors}">
+                                    <div th:object="${author}">
+                                        <td th:text="*{id}"> id </td>
+                                        <td th:text="*{name}"> name </td>
+                                    </div>
+                                </tr>
+                                </tbody>
+                            </table>
+                    </td>
+                    <td>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th> id </th>
+                                <th> name </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="genre : *{genres}">
+                                <div th:object="${genre}">
+                                    <td th:text="*{id}"> id </td>
+                                    <td th:text="*{name}"> name </td>
+                                </div>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td><a th:href="@{${updateLink}(customerId=${bookId})}">Update</a>
+                        | <a th:href="@{${deleteLink}(customerId=${bookId})}"
+                             onclick="if(!(confirm('Are you sure you want to delete this book?')))return false">Delete</a>
+                    </td>
+                </div>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>

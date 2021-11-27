@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>save book</title>
+    <link type="text/css"
+          rel="stylesheet"
+          th:href="@{/css/add-book-style.css}"/>
+    <link type="text/css"
+          rel="stylesheet"
+          th:href="@{/css/style.css}"/>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="header">
+            <h2>Add book</h2>
+        </div>
+    </div>
+    <div id="container">
+        <h3>Save book</h3>
+        <form th:method="POST" th:action="@{/add}" th:object="${book}">
+            <table>
+                <tbody>
+                    <tr>
+                        <td><label for="bookTitle">Enter book title: </label></td>
+                        <td><input type="text" th:field="*{title}" id="bookTitle"/></td>
+                    </tr>
+                    <tr>
+<!--                        <td><label for="authorName">Enter book author name: </label></td>-->
+<!--                        <td><input type="text" th:field="*{authors[0].name}" id="authorName"/></td>-->
+                        <div class="dynamic-update-rows">
+
+                            <button type="button" name="addBookAuthor"
+                                    data-dynamic-update-rows-url="/addBookAuthor">
+                                <i>Add author</i>
+                            </button>
+
+                        </div>
+                        <table class="dynamic-update-rows">
+                            <thead>
+                            <tr>
+<!--                                <th th:text="#{book.authors}">Authors</th>-->
+<!--                                <th th:text="#{seedstarter.rows.head.variety}">Variety</th>-->
+<!--                                <th th:text="#{seedstarter.rows.head.seedsPerCell}">Seeds per cell</th>-->
+                            </tr>
+                            </thead>
+                            <tbody id="dynamicTableContents">
+                            <tr th:fragment="authors" th:each="author,authorStat : ${book.authors}">
+                                <td th:text="${authorStat.count}">1</td>
+                                <td>
+                                    <input type="text" th:field="${book.authors[__${authorStat.index}__].name}" />
+                                </td>
+                                <td>
+                                    <button type="button" name="removeBookAuthor"
+                                    th:value="${authorStat.index}"
+                                    data-dynamic-update-rows-url="/removeContact">
+                                        <i>Remove Book Author</i>
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </tr>
+                    <tr>
+                        <td><label for="genreName">Enter book genre: </label></td>
+                        <td><input type="text" th:field="*{genres[0].name}" id="genreName"/></td>
+                    </tr>
+                    <tr>
+                        <td><label></label></td>
+                        <td><input type="submit" value="Save" class="save"/></td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+    <script type="text/javascript"
+            th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            // Invoke the corresponding URL to update the dynamic fields section using Ajax
+            $('.dynamic-update-rows').on('click', 'button[data-dynamic-update-rows-url]', function () {
+                //event event.preventDefault();
+                let url = $(this).data('dynamic-update-rows-url');
+
+                // adding the row index, needed when deleting a dynamic row
+                let formData = $('form').serializeArray();
+                let param = {};
+                param["name"] = $(this).attr('name');
+                param["value"] = $(this).val();
+                formData.push(param);
+
+                // updating the dynamic section
+                $('#dynamicTableContents').load(url, formData);
+            });
+
+            // autodismiss alerts
+            window.setTimeout(function() {
+                $(".alert").fadeTo(500, 0).slideUp(500, function(){
+                    $(this).remove();
+                });
+            }, 4000);
+        });
+    </script>
+</body>
+</html>

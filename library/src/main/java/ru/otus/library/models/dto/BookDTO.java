@@ -11,10 +11,14 @@ import java.util.List;
 @EqualsAndHashCode(of = {"title", "authors"})
 public class BookDTO {
     private String id;
-    @NonNull
     private String title;
     private List<AuthorDTO> authors;
     private List<GenreDTO> genres;
+
+    public BookDTO() {
+        this.authors = new ArrayList<>();
+        this.genres = new ArrayList<>();
+    }
 
     public BookDTO(@NonNull String title) {
         this.title = title;

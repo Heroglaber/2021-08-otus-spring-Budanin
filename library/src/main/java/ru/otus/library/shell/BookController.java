@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
-@ShellComponent
+//@ShellComponent
 @RequiredArgsConstructor
 public class BookController {
     private final BookService bookService;
