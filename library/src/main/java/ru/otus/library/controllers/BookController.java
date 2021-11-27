@@ -52,6 +52,21 @@ public class BookController {
         return "book_form :: authors";
     }
 
+    @PostMapping("/addBookGenre")
+    public  String addBookGenre(@ModelAttribute("book") BookDTO book, Model model) {
+        book.addGenre(new GenreDTO());
+        return "book_form :: genres";
+    }
+
+    @PostMapping(value="/removeBookGenre", params={"removeBookGenre"})
+    public String removeBookGenre(
+            @ModelAttribute("book") BookDTO book,
+            HttpServletRequest req) {
+        final Integer authorFieldId = Integer.valueOf(req.getParameter("removeBookGenre"));
+        book.getAuthors().remove(authorFieldId.intValue());
+        return "book_form :: genres";
+    }
+
     @PostMapping("/add")
     public String addBook(@ModelAttribute("book") BookDTO book) {
         book.getAuthors().removeIf(authorDTO -> authorDTO.getName().isBlank());

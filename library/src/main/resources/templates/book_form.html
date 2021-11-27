@@ -26,24 +26,7 @@
                         <td><input type="text" th:field="*{title}" id="bookTitle"/></td>
                     </tr>
                     <tr>
-<!--                        <td><label for="authorName">Enter book author name: </label></td>-->
-<!--                        <td><input type="text" th:field="*{authors[0].name}" id="authorName"/></td>-->
-                        <div class="dynamic-update-rows">
-
-                            <button type="button" name="addBookAuthor"
-                                    data-dynamic-update-rows-url="/addBookAuthor">
-                                <i>Add author</i>
-                            </button>
-
-                        </div>
                         <table class="dynamic-update-rows">
-                            <thead>
-                            <tr>
-<!--                                <th th:text="#{book.authors}">Authors</th>-->
-<!--                                <th th:text="#{seedstarter.rows.head.variety}">Variety</th>-->
-<!--                                <th th:text="#{seedstarter.rows.head.seedsPerCell}">Seeds per cell</th>-->
-                            </tr>
-                            </thead>
                             <tbody id="dynamicTableContents">
                             <tr th:fragment="authors" th:each="author,authorStat : ${book.authors}">
                                 <td th:text="${authorStat.count}">1</td>
@@ -61,6 +44,12 @@
                             </tr>
                             </tbody>
                         </table>
+                        <div class="dynamic-update-rows">
+                            <button type="button" name="addBookAuthor"
+                                    data-dynamic-update-rows-url="/addBookAuthor">
+                                <i>Add author</i>
+                            </button>
+                        </div>
                     </tr>
                     <tr>
                         <td><label for="genreName">Enter book genre: </label></td>
