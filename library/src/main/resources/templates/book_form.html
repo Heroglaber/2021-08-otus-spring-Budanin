@@ -53,7 +53,8 @@
                                 <td>
                                     <button type="button" name="removeBookAuthor"
                                     th:value="${authorStat.index}"
-                                    data-dynamic-update-rows-url="/removeContact">
+                                    th:if="${authorStat.index > 0}"
+                                    data-dynamic-update-rows-url="/removeBookAuthor">
                                         <i>Remove Book Author</i>
                                     </button>
                                 </td>

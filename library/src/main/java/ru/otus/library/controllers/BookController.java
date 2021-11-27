@@ -40,13 +40,12 @@ public class BookController {
     @PostMapping("/addBookAuthor")
     public  String addBookAuthor(@ModelAttribute("book") BookDTO book, Model model) {
         book.addAuthor(new AuthorDTO());
-        model.addAttribute("book", book);
         return "book_form :: authors";
     }
 
     @PostMapping(value="/removeBookAuthor", params={"removeBookAuthor"})
     public String removeBookAuthor(
-            BookDTO book,
+            @ModelAttribute("book") BookDTO book,
             HttpServletRequest req) {
         final Integer authorFieldId = Integer.valueOf(req.getParameter("removeBookAuthor"));
         book.getAuthors().remove(authorFieldId.intValue());
