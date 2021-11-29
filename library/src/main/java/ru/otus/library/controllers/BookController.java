@@ -1,6 +1,7 @@
 package ru.otus.library.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.shell.standard.ShellOption;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -62,8 +63,8 @@ public class BookController {
     public String removeBookGenre(
             @ModelAttribute("book") BookDTO book,
             HttpServletRequest req) {
-        final Integer authorFieldId = Integer.valueOf(req.getParameter("removeBookGenre"));
-        book.getAuthors().remove(authorFieldId.intValue());
+        final Integer genreFieldId = Integer.valueOf(req.getParameter("removeBookGenre"));
+        book.getGenres().remove(genreFieldId.intValue());
         return "book_form :: genres";
     }
 
@@ -76,6 +77,12 @@ public class BookController {
 //            addComment(bookDTO.getId(), comment);
 //        }
         //commentService.add(comment);
+        return "redirect:/library";
+    }
+
+    @DeleteMapping("/delete/{bookId}")
+    String deleteBook(@PathVariable("bookId") String bookId) {
+        bookService.deleteById(bookId);
         return "redirect:/library";
     }
 }
