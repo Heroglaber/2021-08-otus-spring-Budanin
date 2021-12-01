@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>save book</title>
+    <link type="text/css"
+          rel="stylesheet"
+          th:href="@{/css/add-book-style.css}"/>
+    <link type="text/css"
+          rel="stylesheet"
+          th:href="@{/css/style.css}"/>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="header">
+            <h2>Add book</h2>
+        </div>
+    </div>
+    <div id="container">
+        <h3>Save book</h3>
+        <form th:method="POST" th:action="@{/add}" th:object="${book}">
+            <table>
+                <tbody>
+                    <tr>
+                        <td><label for="bookTitle">Enter book title: </label></td>
+                        <td><input type="text" th:field="*{title}" id="bookTitle"/></td>
+                    </tr>
+                    <tr>
+                        <table class="dynamic-update-tables">
+                            <tbody id="dynamicTableAuthors">
+                            <tr th:fragment="authors" th:each="author,authorStat : ${book.authors}">
+                                <td th:text="${authorStat.count}">1</td>
+                                <td>
+                                    <input type="text" th:field="${book.authors[__${authorStat.index}__].name}" />
+                                </td>
+                                <td>
+                                    <button type="button" name="removeBookAuthor"
+                                    table-id="dynamicTableAuthors"
+                                    th:value="${authorStat.index}"
+                                    th:if="${authorStat.index > 0}"
+                                    data-dynamic-update-tables-url="/removeBookAuthor">
+                                        <i>Remove Book Author</i>
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="dynamic-update-tables">
+                            <button type="button" name="addBookAuthor"
+                                    table-id="dynamicTableAuthors"
+                                    data-dynamic-update-tables-url="/addBookAuthor">
+                                <i>Add author</i>
+                            </button>
+                        </div>
+                    </tr>
+                    <tr>
+                        <table class="dynamic-update-tables">
+                            <tbody id="dynamicTableGenres">
+                            <tr th:fragment="genres" th:each="genre,genreStat : ${book.genres}">
+                                <td th:text="${genreStat.count}">1</td>
+                                <td>
+                                    <input type="text" th:field="${book.genres[__${genreStat.index}__].name}" />
+                                </td>
+                                <td>
+                                    <button type="button" name="removeBookGenre"
+                                            table-id="dynamicTableGenres"
+                                            th:value="${genreStat.index}"
+                                            th:if="${genreStat.index > 0}"
+                                            data-dynamic-update-tables-url="/removeBookGenre">
+                                        <i>Remove Book Genre</i>
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="dynamic-update-tables">
+                            <button type="button" name="addBookGenre"
+                                    table-id="dynamicTableGenres"
+                                    data-dynamic-update-tables-url="/addBookGenre">
+                                <i>Add genre</i>
+                            </button>
+                        </div>
+                    </tr>
+                    <tr>
+                        <td><label></label></td>
+                        <td><input type="submit" value="Save" class="save"/></td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+    <script type="text/javascript"
+            th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            // Invoke the corresponding URL to update the dynamic fields section using Ajax
+            $('.dynamic-update-tables').on('click', 'button[data-dynamic-update-tables-url]', function () {
+                //event event.preventDefault();
+                let url = $(this).data('dynamic-update-tables-url');
+                let tableId = $(this).attr('table-id');
+
+                // adding the row index, needed when deleting a dynamic row
+                let formData = $('form').serializeArray();
+                let param = {};
+                param["name"] = $(this).attr('name');
+                param["value"] = $(this).val();
+                formData.push(param);
+
+                param = {};
+                param["name"] = 'viewName';
+                param["value"] = 'add_form';
+                formData.push(param);
+
+                // updating the dynamic section
+                $('#' + tableId).load(url, formData);
+            });
+
+            // autodismiss alerts
+            window.setTimeout(function() {
+                $(".alert").fadeTo(500, 0).slideUp(500, function(){
+                    $(this).remove();
+                });
+            }, 4000);
+        });
+    </script>
+</body>
+</html>

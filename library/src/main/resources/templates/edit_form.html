@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>save book</title>
+    <title>edit book</title>
     <link type="text/css"
           rel="stylesheet"
           th:href="@{/css/add-book-style.css}"/>
@@ -13,31 +13,33 @@
 <body>
     <div id="wrapper">
         <div id="header">
-            <h2>Add book</h2>
+            <h2>Edit book</h2>
         </div>
     </div>
     <div id="container">
-        <h3>Save book</h3>
-        <form th:method="POST" th:action="@{/add}" th:object="${book}">
+        <h3>Edit book</h3>
+        <form th:method="POST" th:object="${book}" th:action="@{/edit/{bookId}(bookId = *{id})}">
             <table>
                 <tbody>
+                    <input type="hidden" th:field="*{id}" id="id">
                     <tr>
                         <td><label for="bookTitle">Enter book title: </label></td>
-                        <td><input type="text" th:field="*{title}" id="bookTitle"/></td>
+                        <td><input type="text" th:placeholder="*{title}" th:field="*{title}" id="bookTitle"/></td>
                     </tr>
                     <tr>
                         <table class="dynamic-update-tables">
                             <tbody id="dynamicTableAuthors">
                             <tr th:fragment="authors" th:each="author,authorStat : ${book.authors}">
+                                <input type="hidden" th:field="${book.authors[__${authorStat.index}__].id}" id="authorId">
                                 <td th:text="${authorStat.count}">1</td>
                                 <td>
-                                    <input type="text" th:field="${book.authors[__${authorStat.index}__].name}" />
+                                    <input type="text" th:placeholder="${book.authors[__${authorStat.index}__].name}"
+                                           th:field="${book.authors[__${authorStat.index}__].name}" />
                                 </td>
                                 <td>
                                     <button type="button" name="removeBookAuthor"
                                     table-id="dynamicTableAuthors"
                                     th:value="${authorStat.index}"
-                                    th:if="${authorStat.index > 0}"
                                     data-dynamic-update-tables-url="/removeBookAuthor">
                                         <i>Remove Book Author</i>
                                     </button>
@@ -57,15 +59,16 @@
                         <table class="dynamic-update-tables">
                             <tbody id="dynamicTableGenres">
                             <tr th:fragment="genres" th:each="genre,genreStat : ${book.genres}">
+                                <input type="hidden" th:field="${book.genres[__${genreStat.index}__].id}" id="genreId">
                                 <td th:text="${genreStat.count}">1</td>
                                 <td>
-                                    <input type="text" th:field="${book.genres[__${genreStat.index}__].name}" />
+                                    <input type="text" th:placeholder="${book.genres[__${genreStat.index}__].name}"
+                                           th:field="${book.genres[__${genreStat.index}__].name}" />
                                 </td>
                                 <td>
                                     <button type="button" name="removeBookGenre"
                                             table-id="dynamicTableGenres"
                                             th:value="${genreStat.index}"
-                                            th:if="${genreStat.index > 0}"
                                             data-dynamic-update-tables-url="/removeBookGenre">
                                         <i>Remove Book Genre</i>
                                     </button>
@@ -74,7 +77,7 @@
                             </tbody>
                         </table>
                         <div class="dynamic-update-tables">
-                            <button type="button" name="addBookGenres"
+                            <button type="button" name="addBookGenre"
                                     table-id="dynamicTableGenres"
                                     data-dynamic-update-tables-url="/addBookGenre">
                                 <i>Add genre</i>
@@ -107,6 +110,11 @@
                 let param = {};
                 param["name"] = $(this).attr('name');
                 param["value"] = $(this).val();
+                formData.push(param);
+
+                param = {};
+                param["name"] = 'viewName';
+                param["value"] = 'edit_form';
                 formData.push(param);
 
                 // updating the dynamic section

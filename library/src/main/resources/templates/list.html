@@ -4,6 +4,7 @@
     <meta charset="UTF-8"/>
     <title>Library</title>
 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
@@ -76,8 +77,8 @@
                             </tbody>
                         </table>
                     </td>
-                    <td><button type="button" th:href="@{/update/{id}(id = *{id})}">Update</button>
-                        | <button type="button" th:with="deleteLink = @{/delete/{id}(id = *{id})}"
+                    <td><a name="editBook" th:href="@{/edit/{id}(id = *{id})}" class="btn btn-primary">Edit</a>
+                        | <button type="button" name="deleteBook" th:with="deleteLink = @{/delete/{id}(id = *{id})}"
                              th:onclick="sendDelete([[${deleteLink}]])">Delete</button>
                     </td>
                 </div>
