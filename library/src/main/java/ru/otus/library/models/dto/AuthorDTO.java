@@ -8,11 +8,13 @@ import java.util.List;
 @Setter
 @ToString
 @NoArgsConstructor
-@RequiredArgsConstructor
 @EqualsAndHashCode(of = {"name"})
 public class AuthorDTO {
     private String id;
-    @NonNull
     private String name;
     private List<BookDTO> books;
+
+    public AuthorDTO(String name) {
+        this.name = name;
+    }
 }

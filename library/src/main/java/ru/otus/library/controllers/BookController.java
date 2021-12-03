@@ -78,8 +78,8 @@ public class BookController {
 
     @PostMapping("/add")
     public String addBook(@ModelAttribute("book") BookDTO book) {
-        book.getAuthors().removeIf(authorDTO -> authorDTO.getName().isBlank());
-        book.getGenres().removeIf(genreDTO -> genreDTO.getName().isBlank());
+        book.getAuthors().removeIf(authorDTO -> authorDTO.getName() == null);
+        book.getGenres().removeIf(genreDTO -> genreDTO.getName() == null);
         bookService.add(book);
 //        if(!comment.isBlank()) {
 //            addComment(bookDTO.getId(), comment);
@@ -106,6 +106,8 @@ public class BookController {
         if(!bookId.equals(book.getId())) {
             throw new RuntimeException("Book id in url not match id in model.");
         }
+        book.getAuthors().removeIf(authorDTO -> authorDTO.getName() == null);
+        book.getGenres().removeIf(genreDTO -> genreDTO.getName() == null);
         bookService.update(book);
         return "redirect:/library";
     }

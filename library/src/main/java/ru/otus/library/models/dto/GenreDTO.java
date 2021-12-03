@@ -6,10 +6,12 @@ import lombok.*;
 @Setter
 @ToString
 @NoArgsConstructor
-@RequiredArgsConstructor
 @EqualsAndHashCode(of = {"name"})
 public class GenreDTO {
     private String id;
-    @NonNull
     private String name;
+
+    public GenreDTO(String name) {
+        this.name = name;
+    }
 }
