@@ -3,12 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>save book</title>
-<!--    <link type="text/css"-->
-<!--          rel="stylesheet"-->
-<!--          th:href="@{/css/add-book-style.css}"/>-->
-<!--    <link type="text/css"-->
-<!--          rel="stylesheet"-->
-<!--          th:href="@{/css/style.css}"/>-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
 </head>
@@ -18,25 +12,26 @@
             <h2>Add book</h2>
         </div>
     </div>
-    <div id="container">
+    <div class="w-25 p-3">
         <h3>Save book</h3>
         <form th:method="POST" th:action="@{/add}" th:object="${book}">
-            <table>
+            <table  class="table table-striped">
                 <tbody>
                     <tr>
-                        <td><label for="bookTitle">Enter book title: </label></td>
-                        <td><input type="text" th:field="*{title}" id="bookTitle"/></td>
+                        <td><label for="bookTitle">Book title </label></td>
+                        <td><input class="form-control" type="text" th:field="*{title}" id="bookTitle" placeholder="Enter book title"/></td>
                     </tr>
                     <tr>
-                        <table class="dynamic-update-tables">
+                        <table class="dynamic-update-tables table table-striped mb-0">
                             <tbody id="dynamicTableAuthors">
                             <tr th:fragment="authors" th:each="author,authorStat : ${book.authors}">
-                                <td th:text="${authorStat.count}">1</td>
+                                <td style="display:none;" th:text="${authorStat.count}">1</td>
                                 <td>
-                                    <input type="text" th:field="${book.authors[__${authorStat.index}__].name}" />
+                                    <input class="form-control" type="text" th:field="${book.authors[__${authorStat.index}__].name}" placeholder="Enter author name" />
                                 </td>
                                 <td>
                                     <button type="button" name="removeBookAuthor"
+                                    class="btn btn-primary btn-sm"
                                     table-id="dynamicTableAuthors"
                                     th:value="${authorStat.index}"
                                     th:if="${authorStat.index > 0}"
@@ -47,8 +42,9 @@
                             </tr>
                             </tbody>
                         </table>
-                        <div class="dynamic-update-tables">
+                        <div class="dynamic-update-tables mb-3">
                             <button type="button" name="addBookAuthor"
+                                    class="btn btn-primary btn-sm"
                                     table-id="dynamicTableAuthors"
                                     data-dynamic-update-tables-url="/addBookAuthor">
                                 <i>Add author</i>
@@ -56,15 +52,16 @@
                         </div>
                     </tr>
                     <tr>
-                        <table class="dynamic-update-tables">
+                        <table class="dynamic-update-tables table table-striped mb-0">
                             <tbody id="dynamicTableGenres">
                             <tr th:fragment="genres" th:each="genre,genreStat : ${book.genres}">
-                                <td th:text="${genreStat.count}">1</td>
+                                <td style="display:none;" th:text="${genreStat.count}">1</td>
                                 <td>
-                                    <input type="text" th:field="${book.genres[__${genreStat.index}__].name}" />
+                                    <input class="form-control" type="text" th:field="${book.genres[__${genreStat.index}__].name}" placeholder="Enter genre name"/>
                                 </td>
                                 <td>
                                     <button type="button" name="removeBookGenre"
+                                            class="btn btn-primary btn-sm"
                                             table-id="dynamicTableGenres"
                                             th:value="${genreStat.index}"
                                             th:if="${genreStat.index > 0}"
@@ -75,8 +72,9 @@
                             </tr>
                             </tbody>
                         </table>
-                        <div class="dynamic-update-tables">
+                        <div class="dynamic-update-tables mb-3">
                             <button type="button" name="addBookGenre"
+                                    class="btn btn-primary btn-sm"
                                     table-id="dynamicTableGenres"
                                     data-dynamic-update-tables-url="/addBookGenre">
                                 <i>Add genre</i>
@@ -85,7 +83,7 @@
                     </tr>
                     <tr>
                         <td><label></label></td>
-                        <td><input type="submit" value="Save" class="save"/></td>
+                        <td><input type="submit" value="Save" class="btn btn-primary"/></td>
                     </tr>
                 </tbody>
             </table>
