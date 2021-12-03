@@ -2,10 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Library</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+<!--    <link rel="stylesheet" th:href="@{/css/style.css}">-->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
 </head>
 <body>
 
@@ -21,16 +23,16 @@
 
         <input type="button" value="Add book"
                onclick="window.location.href='addBook'; return false;"
-               class="add-button"
+               class="btn btn-primary"
         />
 
-        <table>
+        <table class="table table-striped">
             <thead>
             <tr>
-                <th> id </th>
-                <th> title </th>
-                <th> authors </th>
-                <th> genres </th>
+                <th scope="col"> id </th>
+                <th scope="col"> title </th>
+                <th scope="col"> authors </th>
+                <th scope="col"> genres </th>
             </tr>
             </thead>
             <tbody>
@@ -42,11 +44,11 @@
                     <td><span th:text="*{id}"> id </span></td>
                     <td><span th:text="*{title}"> title </span></td>
                     <td>
-                            <table>
+                            <table class="table table-striped">
                                 <thead>
                                 <tr>
-                                    <th> id </th>
-                                    <th> name </th>
+                                    <th scope="col"> id </th>
+                                    <th scope="col"> name </th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -60,11 +62,11 @@
                             </table>
                     </td>
                     <td>
-                        <table>
+                        <table class="table table-striped">
                             <thead>
                             <tr>
-                                <th> id </th>
-                                <th> name </th>
+                                <th scope="col"> id </th>
+                                <th scope="col"> name </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -77,8 +79,8 @@
                             </tbody>
                         </table>
                     </td>
-                    <td><a name="editBook" th:href="@{/edit/{id}(id = *{id})}" class="btn btn-primary">Edit</a>
-                        | <button type="button" name="deleteBook" th:with="deleteLink = @{/delete/{id}(id = *{id})}"
+                    <td><a name="editBook" class="btn btn-primary" th:href="@{/edit/{id}(id = *{id})}">Edit</a>
+                        | <button type="button" class="btn btn-primary" name="deleteBook" th:with="deleteLink = @{/delete/{id}(id = *{id})}"
                              th:onclick="sendDelete([[${deleteLink}]])">Delete</button>
                     </td>
                 </div>
