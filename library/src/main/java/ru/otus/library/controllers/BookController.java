@@ -10,7 +10,6 @@ import ru.otus.library.models.dto.AuthorDTO;
 import ru.otus.library.models.dto.BookDTO;
 import ru.otus.library.models.dto.GenreDTO;
 import ru.otus.library.services.BookService;
-import ru.otus.library.services.CommentService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -20,7 +19,6 @@ import java.util.List;
 @RequestMapping(value = {"/", "/library"})
 public class BookController {
     private final BookService bookService;
-    private final CommentService commentService;
 
     @GetMapping
     public String getAll(Model model) {
@@ -36,6 +34,18 @@ public class BookController {
         book.addGenre(new GenreDTO());
         model.addAttribute("book", book);
         return "add_form";
+    }
+
+    @PostMapping("/add")
+    public String addBook(@ModelAttribute("book") BookDTO book) {
+        book.getAuthors().removeIf(authorDTO -> authorDTO.getName() == null);
+        book.getGenres().removeIf(genreDTO -> genreDTO.getName() == null);
+        bookService.add(book);
+//        if(!comment.isBlank()) {
+//            addComment(bookDTO.getId(), comment);
+//        }
+        //commentService.add(comment);
+        return "redirect:/library";
     }
 
     @PostMapping(value="/addBookAuthor", params={"viewName", "addBookAuthor"})
@@ -74,18 +84,6 @@ public class BookController {
         final Integer genreFieldId = Integer.valueOf(req.getParameter("removeBookGenre"));
         book.getGenres().remove(genreFieldId.intValue());
         return viewName + " :: genres";
-    }
-
-    @PostMapping("/add")
-    public String addBook(@ModelAttribute("book") BookDTO book) {
-        book.getAuthors().removeIf(authorDTO -> authorDTO.getName() == null);
-        book.getGenres().removeIf(genreDTO -> genreDTO.getName() == null);
-        bookService.add(book);
-//        if(!comment.isBlank()) {
-//            addComment(bookDTO.getId(), comment);
-//        }
-        //commentService.add(comment);
-        return "redirect:/library";
     }
 
     @DeleteMapping("/delete/{bookId}")
