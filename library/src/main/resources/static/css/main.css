@@ -1,0 +1,30 @@
+:root {
+    --button-color: white;
+    --background-color: #2ecc40;
+    --darken-1: #3f9940;
+    --darken-2: #156f16
+}
+
+h2 {
+    background-color: var(--background-color);
+}
+
+.btn-primary {
+    background-color: var(--background-color);
+    border-color: var(--darken-1) !important;
+    outline: none !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--darken-1);
+}
+
+.btn-primary:active {
+    background-color: var(--darken-1) !important;
+    box-shadow: 0 0 0 0.2rem var(--darken-2) !important;
+}
+
+.btn-primary:focus {
+    background-color: var(--darken-1);
+    box-shadow: 0 0 0 0 , 0 0 0.2rem 0.2rem var(--darken-2);
+}
