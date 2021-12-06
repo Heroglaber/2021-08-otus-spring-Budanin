@@ -1,12 +1,16 @@
 :root {
     --button-color: white;
-    --button-background-color: #2ecc40;
+    --background-color: #2ecc40;
     --darken-1: #3f9940;
     --darken-2: #156f16
 }
 
+h2 {
+    background-color: var(--background-color);
+}
+
 .btn-primary {
-    background-color: var(--button-background-color);
+    background-color: var(--background-color);
     border-color: var(--darken-1) !important;
     outline: none !important;
 }

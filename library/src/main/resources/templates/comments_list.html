@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>edit book</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 <body>
     <div id="wrapper">
@@ -14,14 +14,11 @@
     </div>
     <div class="w-25 p-3">
         <h3>Watch comments</h3>
-            <table class="table table-striped">
-                <tbody>
-                    <input type="hidden" th:field="${book.id}" id="id">
-                    <tr th:object="${book}">
-                        <td><label for="bookTitle">Enter book title: </label></td>
+                    <div th:object="${book}">
+                        <td><label for="bookTitle">Book title: </label></td>
                         <td><input class="form-control" type="text" th:placeholder="*{title}" th:field="*{title}" id="bookTitle"/></td>
-                    </tr>
-                    <tr th:object="${book}">
+                    </div>
+                    <div th:object="${book}">
                         <table class="dynamic-update-tables table table-striped mb-0">
                             <tbody id="dynamicTableAuthors">
                             <tr th:fragment="authors" th:each="author,authorStat : ${book.authors}">
@@ -34,8 +31,8 @@
                             </tr>
                             </tbody>
                         </table>
-                    </tr>
-                    <tr th:object="${book}">
+                    </div>
+                    <div th:object="${book}">
                         <table class="dynamic-update-tables table table-striped mb-0">
                             <tbody id="dynamicTableGenres">
                             <tr th:fragment="genres" th:each="genre,genreStat : ${book.genres}">
@@ -48,8 +45,8 @@
                             </tr>
                             </tbody>
                         </table>
-                    </tr>
-                    <tr>
+                    </div>
+                    <div>
                         <table th:object="${comments}" class="dynamic-update-tables table table-striped mb-0">
                             <tbody>
                             <tr th:if="${comments.isEmpty()}">
@@ -71,9 +68,7 @@
                             </tr>
                             </tbody>
                         </table>
-                    </tr>
-                </tbody>
-            </table>
+                    </div>
     </div>
 
     <script type="text/javascript"
