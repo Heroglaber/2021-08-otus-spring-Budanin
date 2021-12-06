@@ -81,6 +81,8 @@
                     <td><a name="editBook" class="btn btn-primary" th:href="@{/edit/{id}(id = *{id})}">Edit</a>
                         | <button type="button" class="btn btn-primary" name="deleteBook" th:with="deleteLink = @{/delete/{id}(id = *{id})}"
                              th:onclick="sendDelete([[${deleteLink}]])">Delete</button>
+                        <br>
+                        <a name="viewСomments mt-3" class="btn btn-primary" th:href="@{/comments/{id}(id = *{id})}">View comments</a>
                     </td>
                 </div>
             </tr>

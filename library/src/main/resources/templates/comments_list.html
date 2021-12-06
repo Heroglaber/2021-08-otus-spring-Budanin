@@ -9,88 +9,71 @@
 <body>
     <div id="wrapper">
         <div id="header">
-            <h2>Edit book</h2>
+            <h2>Comments</h2>
         </div>
     </div>
     <div class="w-25 p-3">
-        <h3>Edit book</h3>
-        <form th:method="POST" th:object="${book}" th:action="@{/edit/{bookId}(bookId = *{id})}">
-            <table  class="table table-striped">
+        <h3>Watch comments</h3>
+            <table class="table table-striped">
                 <tbody>
-                    <input type="hidden" th:field="*{id}" id="id">
-                    <tr>
+                    <input type="hidden" th:field="${book.id}" id="id">
+                    <tr th:object="${book}">
                         <td><label for="bookTitle">Enter book title: </label></td>
                         <td><input class="form-control" type="text" th:placeholder="*{title}" th:field="*{title}" id="bookTitle"/></td>
                     </tr>
-                    <tr>
+                    <tr th:object="${book}">
                         <table class="dynamic-update-tables table table-striped mb-0">
                             <tbody id="dynamicTableAuthors">
                             <tr th:fragment="authors" th:each="author,authorStat : ${book.authors}">
                                 <input style="display:none;" th:field="${book.authors[__${authorStat.index}__].id}" id="authorId">
                                 <td style="display:none;" th:text="${authorStat.count}">1</td>
                                 <td>
-                                    <input class="form-control" type="text" th:placeholder="${book.authors[__${authorStat.index}__].name}"
+                                    <input type="text" th:placeholder="${book.authors[__${authorStat.index}__].name}"
                                            th:field="${book.authors[__${authorStat.index}__].name}" />
-                                </td>
-                                <td>
-                                    <button type="button" name="removeBookAuthor"
-                                    class="btn btn-primary btn-sm"
-                                    table-id="dynamicTableAuthors"
-                                    th:value="${authorStat.index}"
-                                    data-dynamic-update-tables-url="/removeBookAuthor">
-                                        <i>Remove Book Author</i>
-                                    </button>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
-                        <div class="dynamic-update-tables mb-3">
-                            <button type="button" name="addBookAuthor"
-                                    class="btn btn-primary btn-sm"
-                                    table-id="dynamicTableAuthors"
-                                    data-dynamic-update-tables-url="/addBookAuthor">
-                                <i>Add author</i>
-                            </button>
-                        </div>
                     </tr>
-                    <tr>
+                    <tr th:object="${book}">
                         <table class="dynamic-update-tables table table-striped mb-0">
                             <tbody id="dynamicTableGenres">
                             <tr th:fragment="genres" th:each="genre,genreStat : ${book.genres}">
                                 <input style="display:none;" th:field="${book.genres[__${genreStat.index}__].id}" id="genreId">
-                                <td style="display:none;" th:text="${genreStat.count}">1</td>
+                                <td th:text="${genreStat.count}">1</td>
                                 <td>
                                     <input class="form-control" type="text" th:placeholder="${book.genres[__${genreStat.index}__].name}"
                                            th:field="${book.genres[__${genreStat.index}__].name}" />
                                 </td>
-                                <td>
-                                    <button type="button" name="removeBookGenre"
-                                            class="btn btn-primary btn-sm"
-                                            table-id="dynamicTableGenres"
-                                            th:value="${genreStat.index}"
-                                            data-dynamic-update-tables-url="/removeBookGenre">
-                                        <i>Remove Book Genre</i>
-                                    </button>
-                                </td>
                             </tr>
                             </tbody>
                         </table>
-                        <div class="dynamic-update-tables mb-3">
-                            <button type="button" name="addBookGenre"
-                                    class="btn btn-primary btn-sm"
-                                    table-id="dynamicTableGenres"
-                                    data-dynamic-update-tables-url="/addBookGenre">
-                                <i>Add genre</i>
-                            </button>
-                        </div>
                     </tr>
                     <tr>
-                        <td><label></label></td>
-                        <td><input type="submit" value="Save" class="btn btn-primary"/></td>
+                        <table th:object="${comments}" class="dynamic-update-tables table table-striped mb-0">
+                            <tbody>
+                            <tr th:if="${comments.isEmpty()}">
+                                <td colspan="2"> No comments found for this book. </td>
+                            </tr>
+                            <tr th:each="comment,commentStat : ${comments}">
+                                <td th:text="${comment.message}">message</td>
+                                <td th:text="${comment.id}" id="commentId">id</td>
+                                <td th:text="${commentStat.count}">1</td>
+                                <td>
+<!--                                    <input class="form-control" type="text" th:placeholder="${comment.message}"-->
+<!--                                           th:field="${comment.message}" />-->
+                                </td>
+                                                                <td>
+                                                                    <button type="button" class="btn btn-primary" name="deleteComment"
+                                                                            th:with="deleteLink = @{/comments/delete/{id}(id = ${comment.id})}"
+                                                                            th:onclick="sendDelete([[${deleteLink}]])">Delete</button>
+                                                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </tr>
                 </tbody>
             </table>
-        </form>
     </div>
 
     <script type="text/javascript"
@@ -128,6 +111,18 @@
                 });
             }, 4000);
         });
+
+        function sendDelete(url) {
+            if(!(confirm('Are you sure you want to delete this book?'))) return false;
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("DELETE", url, true);
+            xhttp.onload = function () {
+                let responseURL = xhttp.responseURL;
+                console.log("Redirecting to:", responseURL);
+                window.location.replace(responseURL);
+            };
+            xhttp.send();
+        }
     </script>
 </body>
 </html>

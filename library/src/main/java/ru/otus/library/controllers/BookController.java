@@ -80,9 +80,9 @@ public class BookController {
     public String removeBookGenre(
             @ModelAttribute("book") BookDTO book,
             HttpServletRequest req) {
-        final String viewName = req.getParameter("viewName");
         final Integer genreFieldId = Integer.valueOf(req.getParameter("removeBookGenre"));
         book.getGenres().remove(genreFieldId.intValue());
+        final String viewName = req.getParameter("viewName");
         return viewName + " :: genres";
     }
 
