@@ -12,64 +12,53 @@
             <h2>Comments</h2>
         </div>
     </div>
-    <div class="w-25 p-3">
+    <section class="w-25 p-3" th:object="${book}">
         <h3>Watch comments</h3>
-                    <div th:object="${book}">
-                        <td><label for="bookTitle">Book title: </label></td>
-                        <td><input class="form-control" type="text" th:placeholder="*{title}" th:field="*{title}" id="bookTitle"/></td>
+        <section class="card border-success mb-3" style="border-color: #2ecc40; color: #2ecc40;">
+            <div class="card-header">Book</div>
+            <div class="card-body text-success">
+                <h5 class="card-title" th:text="*{title}">Title</h5>
+                <p class="d-flex flex-row"><b>Authors: </b></p>
+                <div class="d-flex flex-row-reverse" id="authors" th:each="author,authorStat : ${book.authors}">
+                    <p class="card-text" th:text="${book.authors[__${authorStat.index}__].name}">Authors</p>
+                </div>
+                <br>
+                <p class="d-flex flex-row"><b>Genres: </b></p>
+                <div class="d-flex flex-row-reverse" id="genres" th:each="genre,genreStat : ${book.genres}">
+                    <p class="card-text" th:text="${book.genres[__${genreStat.index}__].name}">Genres</p>
+                </div>
+            </div>
+        </section>
+        </section>
+        <section id="comments">
+            <div class="d-flex justify-content-start ml-5">
+                <div class="row">
+                    <div class="grid col-sm-5 col-md-6 col-12 pb-4">
+                        <h1>Comments</h1>
+                        <div class="comment mt-4 col-xl-12" th:each="comment,commentStat : ${comments}">
+                            <img src="https://i.imgur.com/yTFUilP.jpg" alt="" class="rounded-circle" width="40" height="40">
+                            <h4>Anonymous</h4> <span th:text="${#temporals.format(comment.dateTime, 'dd-MM-yyyy HH:mm')}">Date</span> <br>
+                            <p th:text="${comment.message}">Message</p>
+                            <button type="button" class="btn btn-primary" name="deleteComment"
+                                        th:with="deleteLink = @{/comments/delete/{id}(id = ${comment.id})}"
+                                        th:onclick="sendDelete([[${deleteLink}]])">Delete</button>
+                        </div>
                     </div>
-                    <div th:object="${book}">
-                        <table class="dynamic-update-tables table table-striped mb-0">
-                            <tbody id="dynamicTableAuthors">
-                            <tr th:fragment="authors" th:each="author,authorStat : ${book.authors}">
-                                <input style="display:none;" th:field="${book.authors[__${authorStat.index}__].id}" id="authorId">
-                                <td style="display:none;" th:text="${authorStat.count}">1</td>
-                                <td>
-                                    <input type="text" th:placeholder="${book.authors[__${authorStat.index}__].name}"
-                                           th:field="${book.authors[__${authorStat.index}__].name}" />
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                    <div class="col-lg-5 col-md-6 col-sm-5 offset-md-1 offset-sm-1 col-12 mt-4">
+                        <form id="algin-form" th:method="POST" th:action="@{/comments/add/{id}(id = ${book.id})}" th:object="${newComment}">
+                            <div class="form-group">
+                                <h4>Leave a comment</h4>
+                                <label for="message">Message</label>
+                                <textarea name="message" id="message" th:field="*{message}" cols="40" rows="5" class="form-control" style="background-color: lightgrey;"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Save" class="btn btn-primary"/>
+                            </div>
+                        </form>
                     </div>
-                    <div th:object="${book}">
-                        <table class="dynamic-update-tables table table-striped mb-0">
-                            <tbody id="dynamicTableGenres">
-                            <tr th:fragment="genres" th:each="genre,genreStat : ${book.genres}">
-                                <input style="display:none;" th:field="${book.genres[__${genreStat.index}__].id}" id="genreId">
-                                <td th:text="${genreStat.count}">1</td>
-                                <td>
-                                    <input class="form-control" type="text" th:placeholder="${book.genres[__${genreStat.index}__].name}"
-                                           th:field="${book.genres[__${genreStat.index}__].name}" />
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                        <table th:object="${comments}" class="dynamic-update-tables table table-striped mb-0">
-                            <tbody>
-                            <tr th:if="${comments.isEmpty()}">
-                                <td colspan="2"> No comments found for this book. </td>
-                            </tr>
-                            <tr th:each="comment,commentStat : ${comments}">
-                                <td th:text="${comment.message}">message</td>
-                                <td th:text="${comment.id}" id="commentId">id</td>
-                                <td th:text="${commentStat.count}">1</td>
-                                <td>
-<!--                                    <input class="form-control" type="text" th:placeholder="${comment.message}"-->
-<!--                                           th:field="${comment.message}" />-->
-                                </td>
-                                                                <td>
-                                                                    <button type="button" class="btn btn-primary" name="deleteComment"
-                                                                            th:with="deleteLink = @{/comments/delete/{id}(id = ${comment.id})}"
-                                                                            th:onclick="sendDelete([[${deleteLink}]])">Delete</button>
-                                                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-    </div>
+                </div>
+            </div>
+        </section>
 
     <script type="text/javascript"
             th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>

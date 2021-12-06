@@ -24,7 +24,7 @@ public class CommentController {
                          Model model) {
         BookDTO book = bookService.getById(bookId);
         model.addAttribute("book", book);
-        List<CommentDTO> comments = new ArrayList<>();
+        List<CommentDTO> comments;
         try {
             comments = commentService.getAllByBookId(bookId);
         }
@@ -32,15 +32,17 @@ public class CommentController {
             comments = new ArrayList<>();
         }
         model.addAttribute("comments", comments);
+        model.addAttribute("newComment", new CommentDTO(book, ""));
         return "comments_list";
     }
 
-    @PostMapping("/add")
-    String addComment(@ModelAttribute("book") BookDTO book,
-            @ModelAttribute("newComment") String message) {
-        CommentDTO comment = new CommentDTO(book, message);
+    @PostMapping("/add/{bookId}")
+    String addComment(@PathVariable("bookId") String bookId,
+            @ModelAttribute("newComment") CommentDTO comment) {
+        BookDTO book = bookService.getById(bookId);
+        comment.setBook(book);
         commentService.add(comment);
-        return "redirect:/comments/" + book.getId();
+        return "redirect:/comments/" + bookId;
     }
 
     @DeleteMapping(value="/delete/{commentId}")
