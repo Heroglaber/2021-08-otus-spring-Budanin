@@ -41,10 +41,6 @@ public class BookController {
         book.getAuthors().removeIf(authorDTO -> authorDTO.getName() == null);
         book.getGenres().removeIf(genreDTO -> genreDTO.getName() == null);
         bookService.add(book);
-//        if(!comment.isBlank()) {
-//            addComment(bookDTO.getId(), comment);
-//        }
-        //commentService.add(comment);
         return "redirect:/library";
     }
 
