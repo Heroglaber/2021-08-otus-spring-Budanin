@@ -1,17 +1,11 @@
 package ru.otus.library.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.propertyeditors.StringTrimmerEditor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import ru.otus.library.models.dto.AuthorDTO;
 import ru.otus.library.models.dto.BookDTO;
-import ru.otus.library.models.dto.GenreDTO;
+
 import ru.otus.library.services.BookService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -44,7 +38,7 @@ public class BookController {
     }
 
     @PostMapping("/book/{bookId}")
-    public BookDTO editBook(@RequestBody BookDTO book, @PathVariable("bookId") String bookId) {
+    public BookDTO updateBook(@RequestBody BookDTO book, @PathVariable("bookId") String bookId) {
         if(!bookId.equals(book.getId())) {
             throw new RuntimeException("Book id in url not match id in model.");
         }

@@ -1,54 +1,71 @@
 package ru.otus.library.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.otus.library.models.dto.BookDTO;
 import ru.otus.library.models.dto.CommentDTO;
 import ru.otus.library.services.BookService;
 import ru.otus.library.services.CommentService;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
-@RequestMapping(value = {"/comments"})
 public class CommentController {
-    private final CommentService commentService;
     private final BookService bookService;
+    private final CommentService commentService;
 
-    @GetMapping(value="/{bookId}")
-    public String getAll(@PathVariable("bookId") String bookId,
-                         Model model) {
-        BookDTO book = bookService.getById(bookId);
-        model.addAttribute("book", book);
-        List<CommentDTO> comments;
+    @GetMapping("/comment")
+    public List<CommentDTO> getAll() {
         try {
-            comments = commentService.getAllByBookId(bookId);
+            return commentService.getAll();
         }
-        catch(RuntimeException e) {
-            comments = new ArrayList<>();
+        catch(NoSuchElementException e) {
+            return null;
         }
-        model.addAttribute("comments", comments);
-        model.addAttribute("newComment", new CommentDTO(book, ""));
-        return "comments_list";
     }
 
-    @PostMapping("/add/{bookId}")
-    String addComment(@PathVariable("bookId") String bookId,
-            @ModelAttribute("newComment") CommentDTO comment) {
-        BookDTO book = bookService.getById(bookId);
-        comment.setBook(book);
-        commentService.add(comment);
-        return "redirect:/comments/" + bookId;
+    @GetMapping("/book/{bookId}/comment")
+    public List<CommentDTO> getAllByBook(@PathVariable("bookId") String bookId) {
+        try {
+            return commentService.getAllByBookId(bookId);
+        }
+        catch(NoSuchElementException e) {
+            return null;
+        }
     }
 
-    @DeleteMapping(value="/delete/{commentId}")
-    public String deleteComment(@PathVariable("commentId") String commentId) {
-        String bookId = commentService.get(commentId).getBook().getId();
-        commentService.delete(commentId);
-        return "redirect:/comments/" + bookId;
+    @GetMapping("/comment/{commentId}")
+    public CommentDTO getBook(@PathVariable("commentId") String commentId) {
+        try {
+            return commentService.get(commentId);
+        }
+        catch(NoSuchElementException e) {
+            return null;
+        }
+    }
+
+    @PostMapping("/book/{bookId}/comment")
+    public CommentDTO addComment(@RequestBody CommentDTO comment, @PathVariable("bookId") String bookId) {
+        comment.setBook(bookService.getById(bookId));
+        return commentService.add(comment);
+    }
+
+    @PostMapping("/book/{bookId}/comment/{commentId}")
+    public CommentDTO updateCommentMessage(@RequestBody CommentDTO comment
+                                           ,@PathVariable("bookId") String bookId
+                                           ,@PathVariable("commentId") String commentId) {
+        comment.setBook(bookService.getById(bookId));
+        return commentService.update(commentService.get(commentId));
+    }
+
+    @DeleteMapping(value="/comment/{commentId}")
+    public CommentDTO deleteComment(@PathVariable("commentId") String commentId) {
+        try {
+            return commentService.delete(commentId);
+        }
+        catch(NoSuchElementException e) {
+            return null;
+        }
     }
 }
