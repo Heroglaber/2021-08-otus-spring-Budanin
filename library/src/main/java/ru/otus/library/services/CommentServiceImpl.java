@@ -8,6 +8,7 @@ import ru.otus.library.models.dto.CommentDTO;
 import ru.otus.library.repositories.CommentRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class CommentServiceImpl implements CommentService{
@@ -30,7 +31,7 @@ public class CommentServiceImpl implements CommentService{
     public List<CommentDTO> getAllByBookId(String bookId) {
         List<Comment> comments = commentRepository.findAllByBook_Id(bookId);
         if(comments.isEmpty()) {
-            throw new RuntimeException("Comments not found for this book.");
+            throw new NoSuchElementException("Comments not found for this book.");
         }
         return commentMapper.toCommentDTOList(comments);
     }
