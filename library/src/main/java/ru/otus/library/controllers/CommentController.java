@@ -55,8 +55,9 @@ public class CommentController {
     public CommentDTO updateCommentMessage(@RequestBody CommentDTO comment
                                            ,@PathVariable("bookId") String bookId
                                            ,@PathVariable("commentId") String commentId) {
+        comment.setId(commentId);
         comment.setBook(bookService.getById(bookId));
-        return commentService.update(commentService.get(commentId));
+        return commentService.update(comment);
     }
 
     @DeleteMapping(value="/comment/{commentId}")
