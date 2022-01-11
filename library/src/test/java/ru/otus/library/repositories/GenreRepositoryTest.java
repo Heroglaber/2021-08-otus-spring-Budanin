@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import ru.otus.library.configs.MongoConfig;
 import ru.otus.library.models.converters.AuthorMapperImpl;
 import ru.otus.library.models.converters.BookMapperImpl;
 import ru.otus.library.models.converters.CommentMapperImpl;
@@ -24,7 +25,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DisplayName("Genre repository should ")
 @DataMongoTest
-@Import({ BookServiceImpl.class, BookMapperImpl.class, AuthorMapperImpl.class, CommentMapperImpl.class, GenreMapperImpl.class, AuthorServiceImpl.class, GenreServiceImpl.class, CommentServiceImpl.class})
+@Import({ MongoConfig.class, BookServiceImpl.class, BookMapperImpl.class, AuthorMapperImpl.class, CommentMapperImpl.class, GenreMapperImpl.class, AuthorServiceImpl.class, GenreServiceImpl.class, CommentServiceImpl.class})
 public class GenreRepositoryTest {
     private static final String EXISTING_GENRE_NAME = "horror";
     private static final int GENRES_TABLE_SIZE = 7;
