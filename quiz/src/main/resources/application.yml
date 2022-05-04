@@ -1,0 +1,8 @@
+quiz:
+  language: ru
+csv:
+  config:
+    basename: i18n/csv
+spring:
+  messages:
+    basename: i18n/messages
